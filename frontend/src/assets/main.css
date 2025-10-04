@@ -1,0 +1,57 @@
+:root {
+    --background-dark: #1a1a1a;
+    --surface-dark: #242424;
+    --text-primary: rgba(255, 255, 255, 0.87);
+    --accent-blue: #5c8dff;
+    --border-color: #3a3a3a;
+    --soft-radius: 8px;
+  }
+  
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: var(--background-dark);
+    color: var(--text-primary);
+  }
+  
+  #app {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  h1, h2, h3, h4 {
+    font-weight: 600;
+  }
+  
+  hr {
+    border: none;
+    border-top: 1px solid var(--border-color);
+    margin: 2rem 0;
+  }
+  
+  button {
+    background-color: var(--accent-blue);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: var(--soft-radius);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    font-weight: 500;
+  }
+  
+  button:hover {
+    background-color: #7a9eff;
+  }
+  
+  button:disabled {
+    background-color: #4a4a4a;
+    cursor: not-allowed;
+  }
+  
+  input[type="file"] {
+    /* We can style this better later if needed */
+    margin-right: 1rem;
+  }
