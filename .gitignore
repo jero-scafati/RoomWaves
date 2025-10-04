@@ -1,0 +1,82 @@
+.venv/
+venv/
+__pycache__/
+.env
+*.py[cod]
+*.egg-info/
+.dist/
+
+# === Node / package manager ===
+node_modules/
+.pnp/
+.pnp.js
+
+# === Build / output ===
+dist/
+build/
+out/
+public/dist/
+
+# === Vite / cache ===
+.vite/
+.cache/
+!.cache/important-placeholder
+
+# === Nuxt (optional) ===
+.nuxt/
+.ssr/
+.server/
+
+# === Logs ===
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# === Environment / secrets ===
+.env
+.env.*.local
+.env.local
+.env.development
+.env.development.local
+.env.test.local
+.env.production.local
+# If you commit a specific example env file, keep it (e.g. .env.example)
+
+# === OS files ===
+.DS_Store
+Thumbs.db
+
+# === Editors / IDEs ===
+.vscode/
+.idea/
+*.sublime-*
+*.code-workspace
+
+# === Test / coverage ===
+coverage/
+.nyc_output/
+jest*.json
+jest.cache
+
+# === TypeScript / build artifacts ===
+*.tsbuildinfo
+dist-ssr/
+build/
+
+# === Tool caches ===
+.eslintcache
+stylelintcache
+parcel-cache/
+.cache-loader/
+
+# === Misc ===
+*.local
+*.pem
+*.key
+*.crt
+.vagrant/
+tmp/
+temp/
