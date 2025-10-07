@@ -5,7 +5,7 @@ __pycache__/
 *.py[cod]
 *.egg-info/
 .dist/
-
+.windsurf/
 # === Node / package manager ===
 node_modules/
 .pnp/
@@ -54,7 +54,7 @@ Thumbs.db
 .idea/
 *.sublime-*
 *.code-workspace
-
+.windsurf/
 # === Test / coverage ===
 coverage/
 .nyc_output/

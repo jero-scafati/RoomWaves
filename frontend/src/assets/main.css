@@ -1,57 +1,115 @@
-:root {
-    --background-dark: #1a1a1a;
-    --surface-dark: #242424;
-    --text-primary: rgba(255, 255, 255, 0.87);
-    --accent-blue: #5c8dff;
-    --border-color: #3a3a3a;
-    --soft-radius: 8px;
-  }
-  
-  body {
-    margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    background-color: var(--background-dark);
-    color: var(--text-primary);
-  }
-  
-  #app {
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-  
-  h1, h2, h3, h4 {
-    font-weight: 600;
-  }
-  
-  hr {
-    border: none;
-    border-top: 1px solid var(--border-color);
-    margin: 2rem 0;
-  }
-  
-  button {
-    background-color: var(--accent-blue);
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: var(--soft-radius);
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-    font-weight: 500;
-  }
-  
-  button:hover {
-    background-color: #7a9eff;
-  }
-  
-  button:disabled {
-    background-color: #4a4a4a;
-    cursor: not-allowed;
-  }
-  
-  input[type="file"] {
-    /* We can style this better later if needed */
-    margin-right: 1rem;
-  }
+/* ============================================================================
+   MAIN STYLESHEET - RoomWaves
+   ============================================================================ */
+
+/* Import design system */
+@import './design-tokens.css';
+@import './utilities.css';
+
+/* ============================================================================
+   GLOBAL STYLES
+   ============================================================================ */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+}
+
+#app {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================================================================
+   TYPOGRAPHY
+   ============================================================================ */
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
+  margin: 0 0 var(--space-md) 0;
+  color: var(--color-text-primary);
+}
+
+h1 { font-size: var(--font-size-4xl); }
+h2 { font-size: var(--font-size-3xl); }
+h3 { font-size: var(--font-size-2xl); }
+h4 { font-size: var(--font-size-xl); }
+
+p {
+  margin: 0 0 var(--space-md) 0;
+  line-height: var(--line-height-relaxed);
+}
+
+/* ============================================================================
+   BASE ELEMENTS
+   ============================================================================ */
+
+hr {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: var(--space-xl) 0;
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: var(--color-primary-hover);
+}
+
+/* ============================================================================
+   FORM ELEMENTS
+   ============================================================================ */
+
+button {
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: var(--font-weight-medium);
+}
+
+input,
+select,
+textarea {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+input[type="file"] {
+  cursor: pointer;
+}
+
+/* ============================================================================
+   SCROLLBAR STYLING (Webkit)
+   ============================================================================ */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-surface);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border-light);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-border-lighter);
+}

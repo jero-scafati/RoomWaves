@@ -17,17 +17,11 @@ const props = defineProps({
 // ============================================================================
 // EMITS
 // ============================================================================
-const emit = defineEmits(['toggle']);
+// No emits needed - automatic loading
 </script>
 
 <template>
   <div class="tab-content">
-    <div class="controls">
-      <button @click="emit('toggle')" :disabled="isLoading">
-        {{ isVisible ? 'Clear' : 'Plot' }}
-      </button>
-    </div>
-    
     <div class="chart-container">
       <div v-if="isLoading" class="status-message">
         <p>Loading Waveform...</p>
@@ -37,7 +31,7 @@ const emit = defineEmits(['toggle']);
       </div>
       <WaveformChart v-else-if="isVisible" :chartData="chartData" />
       <div v-else class="status-message">
-        <p>Click "Plot" to visualize the waveform.</p>
+        <p>Loading waveform data...</p>
       </div>
     </div>
   </div>
@@ -57,36 +51,6 @@ const emit = defineEmits(['toggle']);
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-.controls {
-  margin-bottom: 1.5rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 1.5rem;
-  flex-wrap: wrap;
-}
-
-button {
-  background-color: #3b82f6;
-  color: white;
-  border: none;
-  padding: 10px 24px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-  font-weight: 500;
-  font-size: 0.95rem;
-}
-
-button:hover {
-  background-color: #2563eb;
-}
-
-button:disabled {
-  background-color: #4a4a4a;
-  cursor: not-allowed;
 }
 
 .chart-container {

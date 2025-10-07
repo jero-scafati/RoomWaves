@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from '@/views/HomeView.vue';
 import RIRView from '@/views/RIRView.vue';
 import SignalView from '@/views/SignalView.vue';
+import ConvolveView from '@/views/ConvolveView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -20,6 +21,11 @@ const router = createRouter({
       path: '/signal',
       name: 'signal',
       component: SignalView,
+    },
+    {
+      path: '/convolve',
+      name: 'convolve',
+      component: ConvolveView,
     },
     {
       path: '/about',

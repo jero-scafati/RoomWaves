@@ -19,7 +19,7 @@ const props = defineProps({
 // ============================================================================
 // EMITS
 // ============================================================================
-const emit = defineEmits(['toggle', 'update:selectedBands', 'refetch']);
+const emit = defineEmits(['update:selectedBands']);
 
 // ============================================================================
 // COMPUTED
@@ -49,7 +49,79 @@ const parameterNames = [
 // ============================================================================
 const handleBandsChange = (value) => {
   emit('update:selectedBands', value);
-  emit('refetch');
+};
+
+const downloadCSV = () => {
+  if (!tableData.value.length) return;
+  
+  // Create CSV header
+  const headers = ['Frequency (Hz)', ...parameterNames.map(p => p.label)];
+  const csvContent = [
+    headers.join(','),
+    ...tableData.value.map(row => {
+      const values = [
+        row.frequency,
+        ...parameterNames.map(param => row[param.key]?.toFixed(2) ?? 'N/A')
+      ];
+      return values.join(',');
+    })
+  ].join('\n');
+  
+  // Download the file
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement('a');
+  const url = URL.createObjectURL(blob);
+  const bandType = props.selectedBands === 1 ? 'octave' : 'third-octave';
+  link.setAttribute('href', url);
+  link.setAttribute('download', `acoustical-parameters-${bandType}.csv`);
+  link.style.visibility = 'hidden';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
+const downloadPDF = async () => {
+  if (!tableData.value.length) return;
+  
+  try {
+    // Dynamically import jsPDF
+    const { jsPDF } = await import('jspdf');
+    await import('jspdf-autotable');
+    
+    const doc = new jsPDF();
+    const bandType = props.selectedBands === 1 ? 'Octave Band' : '1/3 Octave Band';
+    
+    // Add title
+    doc.setFontSize(16);
+    doc.text('Acoustical Parameters', 14, 15);
+    doc.setFontSize(11);
+    doc.text(`${bandType} Analysis`, 14, 22);
+    
+    // Prepare table data
+    const headers = [['Frequency (Hz)', ...parameterNames.map(p => p.label)]];
+    const body = tableData.value.map(row => [
+      row.frequency,
+      ...parameterNames.map(param => row[param.key]?.toFixed(2) ?? 'N/A')
+    ]);
+    
+    // Add table
+    doc.autoTable({
+      head: headers,
+      body: body,
+      startY: 28,
+      theme: 'grid',
+      styles: { fontSize: 9, cellPadding: 3 },
+      headStyles: { fillColor: [59, 130, 246], fontStyle: 'bold' },
+      alternateRowStyles: { fillColor: [245, 245, 245] }
+    });
+    
+    // Download the file
+    const filename = `acoustical-parameters-${bandType.toLowerCase().replace(' ', '-')}.pdf`;
+    doc.save(filename);
+  } catch (error) {
+    console.error('Error generating PDF:', error);
+    alert('Error generating PDF. Please make sure jsPDF is installed.');
+  }
 };
 </script>
 
@@ -68,9 +140,17 @@ const handleBandsChange = (value) => {
           </option>
         </select>
       </div>
-      <button @click="emit('toggle')" :disabled="isLoading">
-        {{ isVisible ? 'Clear' : 'Show Parameters' }}
-      </button>
+      
+      <div v-if="isVisible" class="download-buttons">
+        <button @click="downloadCSV" class="download-btn csv-btn" :disabled="isLoading">
+          <span class="btn-icon">📊</span>
+          Download CSV
+        </button>
+        <button @click="downloadPDF" class="download-btn pdf-btn" :disabled="isLoading">
+          <span class="btn-icon">📄</span>
+          Download PDF
+        </button>
+      </div>
     </div>
     
     <div class="content-container">
@@ -126,6 +206,9 @@ const handleBandsChange = (value) => {
 </template>
 
 <style scoped>
+/* ============================================================================
+   ANIMATIONS
+   ============================================================================ */
 .tab-content {
   animation: fadeIn 0.3s ease-in;
 }
@@ -141,6 +224,9 @@ const handleBandsChange = (value) => {
   }
 }
 
+/* ============================================================================
+   LAYOUT - CONTROLS
+   ============================================================================ */
 .controls {
   margin-bottom: 1.5rem;
   display: flex;
@@ -156,6 +242,34 @@ const handleBandsChange = (value) => {
   gap: 0.5rem;
 }
 
+.download-buttons {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+/* ============================================================================
+   LAYOUT - CONTENT
+   ============================================================================ */
+.content-container {
+  padding: 1rem;
+  background-color: #242424;
+  border-radius: 8px;
+  min-height: 420px;
+}
+
+.table-wrapper {
+  width: 100%;
+}
+
+.table-container {
+  overflow-x: auto;
+  margin-bottom: 2rem;
+}
+
+/* ============================================================================
+   FORM ELEMENTS
+   ============================================================================ */
 label {
   color: #a0a0a0;
   font-size: 0.9rem;
@@ -181,51 +295,51 @@ select:focus {
   border-color: #3b82f6;
 }
 
-button {
-  background-color: #3b82f6;
+/* ============================================================================
+   BUTTONS
+   ============================================================================ */
+.download-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   color: white;
   border: none;
-  padding: 10px 24px;
+  padding: 10px 18px;
   border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: all 0.2s ease;
   font-weight: 500;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
 }
 
-button:hover {
-  background-color: #2563eb;
-}
-
-button:disabled {
-  background-color: #4a4a4a;
+.download-btn:disabled {
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
-.content-container {
-  padding: 1rem;
-  background-color: #242424;
-  border-radius: 8px;
-  min-height: 420px;
+.csv-btn {
+  background-color: #10b981;
 }
 
-.status-message {
-  color: #a0a0a0;
-  font-size: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 400px;
+.csv-btn:hover:not(:disabled) {
+  background-color: #059669;
 }
 
-.error {
-  color: #f87171;
+.pdf-btn {
+  background-color: #ef4444;
 }
 
-.table-wrapper {
-  width: 100%;
+.pdf-btn:hover:not(:disabled) {
+  background-color: #dc2626;
 }
 
+.btn-icon {
+  font-size: 1.1rem;
+}
+
+/* ============================================================================
+   TYPOGRAPHY - HEADERS
+   ============================================================================ */
 .table-header {
   text-align: center;
   margin-bottom: 1.5rem;
@@ -243,11 +357,25 @@ button:disabled {
   margin: 0;
 }
 
-.table-container {
-  overflow-x: auto;
-  margin-bottom: 2rem;
+/* ============================================================================
+   TYPOGRAPHY - STATUS MESSAGES
+   ============================================================================ */
+.status-message {
+  color: #a0a0a0;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
 }
 
+.error {
+  color: #f87171;
+}
+
+/* ============================================================================
+   TABLE STYLES
+   ============================================================================ */
 .parameters-table {
   width: 100%;
   border-collapse: collapse;
@@ -291,6 +419,9 @@ button:disabled {
   min-width: 120px;
 }
 
+/* ============================================================================
+   LEGEND
+   ============================================================================ */
 .legend {
   background-color: #1a1a1a;
   border-radius: 8px;
@@ -326,8 +457,19 @@ button:disabled {
   font-weight: 600;
 }
 
-/* Responsive design */
+/* ============================================================================
+   RESPONSIVE DESIGN
+   ============================================================================ */
 @media (max-width: 768px) {
+  .controls {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .download-buttons {
+    justify-content: center;
+  }
+  
   .table-container {
     font-size: 0.8rem;
   }

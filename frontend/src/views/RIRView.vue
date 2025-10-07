@@ -2,7 +2,8 @@
 // ============================================================================
 // IMPORTS
 // ============================================================================
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
+import ApiService from '@/services/ApiService.js';
 import AudioUploader from '@/components/AudioUploader.vue';
 import WaveformTab from '@/components/tabs/WaveformTab.vue';
 import FrequencyTab from '@/components/tabs/FrequencyTab.vue';
@@ -41,49 +42,133 @@ const handleUploadSuccess = (filename) => {
   spectrogram.clear();
   surface3d.clear();
   parameters.clear();
+  // Automatically fetch data for the current active tab
+  fetchDataForActiveTab();
 };
 
-const handleWaveformToggle = () => {
-  waveform.toggle(uploadedFilename.value);
+const handleExampleSelected = async (filename) => {
+  // For examples, we need to fetch the file and upload it to backend for analysis
+  try {
+    // Fetch the example file from public folder
+    const response = await fetch(`/examples/${filename}`);
+    if (!response.ok) {
+      console.error('Failed to fetch example file');
+      return;
+    }
+    
+    // Convert to File object
+    const blob = await response.blob();
+    const file = new File([blob], filename, { type: blob.type });
+    
+    // Upload to backend
+    const uploadResponse = await ApiService.uploadFile(file);
+    
+    // Use the uploaded filename
+    uploadedFilename.value = uploadResponse.data.filename;
+    
+    // Clear all plots
+    waveform.clear();
+    frequency.clear();
+    spectrogram.clear();
+    surface3d.clear();
+    parameters.clear();
+    
+    // Automatically fetch data for the current active tab
+    fetchDataForActiveTab();
+  } catch (err) {
+    console.error('Failed to process example file:', err);
+  }
 };
 
-const handleFrequencyToggle = () => {
-  frequency.toggle(uploadedFilename.value);
+// ============================================================================
+// WATCHERS
+// ============================================================================
+// Watch for tab changes and automatically fetch data
+watch(activeTab, (newTab, oldTab) => {
+  if (!uploadedFilename.value) return;
+  
+  // Clear the previous tab's data
+  clearTabData(oldTab);
+  
+  // Fetch data for the new tab
+  fetchDataForActiveTab();
+});
+
+// Watch for frequency response bands changes
+watch(() => frequency.selectedBands.value, () => {
+  if (uploadedFilename.value && activeTab.value === 'frequency' && frequency.isVisible.value) {
+    frequency.fetchData(uploadedFilename.value);
+  }
+});
+
+// Watch for surface3d bands changes
+watch(() => surface3d.bands.value, () => {
+  if (uploadedFilename.value && activeTab.value === 'surface' && surface3d.isVisible.value) {
+    surface3d.fetchData(uploadedFilename.value);
+  }
+});
+
+// Watch for parameters bands changes
+watch(() => parameters.selectedBands.value, () => {
+  if (uploadedFilename.value && activeTab.value === 'parameters' && parameters.isVisible.value) {
+    parameters.fetchData(uploadedFilename.value);
+  }
+});
+
+// ============================================================================
+// HELPER METHODS
+// ============================================================================
+const fetchDataForActiveTab = () => {
+  if (!uploadedFilename.value) return;
+  
+  switch (activeTab.value) {
+    case 'waveform':
+      waveform.fetchData(uploadedFilename.value);
+      break;
+    case 'frequency':
+      frequency.fetchData(uploadedFilename.value);
+      break;
+    case 'spectrogram':
+      spectrogram.fetchData(uploadedFilename.value);
+      break;
+    case 'surface':
+      surface3d.fetchData(uploadedFilename.value);
+      break;
+    case 'parameters':
+      parameters.fetchData(uploadedFilename.value);
+      break;
+  }
 };
 
-const handleSpectrogramToggle = () => {
-  spectrogram.toggle(uploadedFilename.value);
-};
-
-const handleSurface3DToggle = () => {
-  surface3d.toggle(uploadedFilename.value);
-};
-
-const handleSurface3DRefetch = () => {
-  surface3d.fetchData(uploadedFilename.value);
-};
-
-const handleParametersToggle = () => {
-  parameters.toggle(uploadedFilename.value);
-};
-
-const handleParametersRefetch = () => {
-  parameters.fetchData(uploadedFilename.value);
+const clearTabData = (tab) => {
+  switch (tab) {
+    case 'waveform':
+      waveform.clear();
+      break;
+    case 'frequency':
+      frequency.clear();
+      break;
+    case 'spectrogram':
+      spectrogram.clear();
+      break;
+    case 'surface':
+      surface3d.clear();
+      break;
+    case 'parameters':
+      parameters.clear();
+      break;
+  }
 };
 </script>
 
 <template>
   <div class="home-view">
     <!-- Header -->
-    <header class="text-center">
-      <h1>IR Analyzer</h1>
-      <p>Upload your impulse response file to get started.</p>
-    </header>
-
-    <hr class="separator" />
-
     <!-- File Uploader -->
-    <AudioUploader @upload-success="handleUploadSuccess" />
+    <AudioUploader 
+      @upload-success="handleUploadSuccess"
+      @example-selected="handleExampleSelected"
+    />
 
     <!-- Navigation Tabs -->
     <nav v-if="uploadedFilename" class="plot-navbar">
@@ -134,7 +219,6 @@ const handleParametersRefetch = () => {
         :isLoading="waveform.isLoading.value"
         :error="waveform.error.value"
         :isVisible="waveform.isVisible.value"
-        @toggle="handleWaveformToggle"
       />
 
       <!-- Frequency Response Tab -->
@@ -146,7 +230,6 @@ const handleParametersRefetch = () => {
         :isVisible="frequency.isVisible.value"
         :selectedBands="frequency.selectedBands.value"
         :bandsOptions="frequency.bandsOptions"
-        @toggle="handleFrequencyToggle"
         @update:selectedBands="(val) => frequency.selectedBands.value = val"
       />
 
@@ -157,7 +240,6 @@ const handleParametersRefetch = () => {
         :isLoading="spectrogram.isLoading.value"
         :error="spectrogram.error.value"
         :isVisible="spectrogram.isVisible.value"
-        @toggle="handleSpectrogramToggle"
       />
 
       <!-- 3D Surface Tab -->
@@ -170,10 +252,8 @@ const handleParametersRefetch = () => {
         :dataReduction="surface3d.dataReduction.value"
         :bands="surface3d.bands.value"
         :bandsOptions="surface3d.bandsOptions"
-        @toggle="handleSurface3DToggle"
         @update:dataReduction="(val) => surface3d.dataReduction.value = val"
         @update:bands="(val) => surface3d.bands.value = val"
-        @refetch="handleSurface3DRefetch"
       />
 
       <!-- Parameters Tab -->
@@ -185,9 +265,7 @@ const handleParametersRefetch = () => {
         :isVisible="parameters.isVisible.value"
         :selectedBands="parameters.selectedBands.value"
         :bandsOptions="parameters.bandsOptions"
-        @toggle="handleParametersToggle"
         @update:selectedBands="(val) => parameters.selectedBands.value = val"
-        @refetch="handleParametersRefetch"
       />
 
     </section>

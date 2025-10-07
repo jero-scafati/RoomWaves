@@ -23,15 +23,15 @@ const currentYear = new Date().getFullYear();
 
 <style scoped>
 .footer {
-  background-color: #1a1a1a;
-  border-top: 1px solid #3a3a3a;
+  background-color: var(--color-background-secondary);
+  border-top: 1px solid var(--color-border);
   margin-top: auto;
 }
 
 .footer-container {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: var(--space-xl);
 }
 
 .footer-content {
@@ -41,32 +41,32 @@ const currentYear = new Date().getFullYear();
 .footer-logo {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
 }
 
 .logo-icon {
-  font-size: 1.5rem;
+  font-size: var(--font-size-2xl);
 }
 
 .logo-text {
-  font-size: 1.3rem;
-  font-weight: 700;
-  background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .footer-description {
-  color: #b0b0b0;
-  margin-bottom: 1rem;
-  font-size: 0.95rem;
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-md);
+  font-size: var(--font-size-sm);
 }
 
 .footer-copyright {
-  color: #808080;
-  font-size: 0.85rem;
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-xs);
   margin: 0;
 }
 </style>

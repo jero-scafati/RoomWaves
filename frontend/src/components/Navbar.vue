@@ -24,6 +24,9 @@ const navigateTo = (path) => {
           <button @click="navigateTo('/signal')" class="nav-button">
             Signals
           </button>
+          <button @click="navigateTo('/convolve')" class="nav-button">
+            Convolve
+          </button>
           <button @click="navigateTo('/about')" class="nav-button">
             About
           </button>
@@ -33,7 +36,7 @@ const navigateTo = (path) => {
       <!-- Right Side: GitHub Link -->
       <div class="navbar-right">
         <a
-          href="https://github.com/jero-scafati/FastEQ"
+          href="https://github.com/jero-scafati/RoomWaves"
           target="_blank"
           rel="noopener noreferrer"
           class="github-link"
@@ -55,19 +58,20 @@ const navigateTo = (path) => {
 
 <style scoped>
 .navbar {
-  background: rgba(26, 26, 26, 0.95);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--glass-background);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border-bottom: 1px solid var(--glass-border);
   position: sticky;
   top: 0;
-  z-index: 1000;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  z-index: var(--z-navbar);
+  box-shadow: var(--glass-shadow);
 }
 
 .navbar-container {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 1rem 2rem;
+  padding: var(--space-md) var(--space-xl);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -76,15 +80,15 @@ const navigateTo = (path) => {
 .navbar-left {
   display: flex;
   align-items: center;
-  gap: 2rem;
+  gap: var(--space-xl);
 }
 
 .logo {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--space-sm);
   cursor: pointer;
-  transition: transform 0.2s ease;
+  transition: transform var(--transition-base);
 }
 
 .logo:hover {
@@ -92,39 +96,54 @@ const navigateTo = (path) => {
 }
 
 .logo-icon {
-  font-size: 1.8rem;
+  font-size: var(--font-size-2xl);
 }
 
 .logo-text {
-  font-size: 1.5rem;
-  font-weight: 700;
-  background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
 }
 
 .nav-links {
   display: flex;
-  gap: 0.5rem;
+  gap: var(--space-sm);
   align-items: center;
 }
 
 .nav-button {
   background: transparent;
-  color: #b0b0b0;
+  color: var(--color-text-secondary);
   border: none;
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
-  font-weight: 500;
+  padding: var(--space-sm) var(--space-md);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
   cursor: pointer;
-  border-radius: 6px;
-  transition: all 0.3s ease;
+  border-radius: var(--radius-md);
+  transition: color var(--transition-base);
+  position: relative;
+}
+
+.nav-button::after {
+  content: '';
+  position: absolute;
+  bottom: 6px;
+  left: var(--space-md);
+  width: calc(100% - var(--space-xl));
+  height: 2px;
+  background-color: var(--color-text-primary);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.3s ease;
 }
 
 .nav-button:hover {
-  background: rgba(59, 130, 246, 0.1);
-  color: #3b82f6;
+  color: var(--color-text-primary);
+}
+
+.nav-button:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
 }
 
 .navbar-right {
@@ -135,20 +154,37 @@ const navigateTo = (path) => {
 .github-link {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
   background: transparent;
-  color: #b0b0b0;
+  color: var(--color-text-secondary);
   text-decoration: none;
-  border-radius: 6px;
-  transition: all 0.3s ease;
+  border-radius: var(--radius-md);
+  transition: color var(--transition-base);
   border: 1px solid transparent;
+  position: relative;
+}
+
+.github-link::after {
+  content: '';
+  position: absolute;
+  bottom: 6px;
+  left: var(--space-md);
+  width: calc(100% - var(--space-xl));
+  height: 2px;
+  background-color: var(--color-text-primary);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.3s ease;
 }
 
 .github-link:hover {
-  background: rgba(255, 255, 255, 0.05);
-  color: #e0e0e0;
-  border-color: rgba(255, 255, 255, 0.1);
+  color: var(--color-text-primary);
+}
+
+.github-link:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
 }
 
 .github-icon {
@@ -157,30 +193,30 @@ const navigateTo = (path) => {
 }
 
 .github-text {
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
   .navbar-container {
-    padding: 1rem;
+    padding: var(--space-md);
   }
 
   .navbar-left {
-    gap: 1rem;
+    gap: var(--space-md);
   }
 
   .logo-text {
-    font-size: 1.2rem;
+    font-size: var(--font-size-xl);
   }
 
   .nav-links {
-    gap: 0.25rem;
+    gap: var(--space-xs);
   }
 
   .nav-button {
-    padding: 0.4rem 0.7rem;
-    font-size: 0.9rem;
+    padding: var(--space-xs) var(--space-sm);
+    font-size: var(--font-size-sm);
   }
 
   .github-text {
@@ -190,16 +226,16 @@ const navigateTo = (path) => {
 
 @media (max-width: 480px) {
   .logo-icon {
-    font-size: 1.5rem;
+    font-size: var(--font-size-2xl);
   }
 
   .logo-text {
-    font-size: 1rem;
+    font-size: var(--font-size-base);
   }
 
   .nav-button {
-    padding: 0.3rem 0.5rem;
-    font-size: 0.85rem;
+    padding: var(--space-xs) var(--space-sm);
+    font-size: var(--font-size-sm);
   }
 }
 </style>

@@ -15,6 +15,11 @@ const features = [
     description: 'Generate exponential sweep and inverse sweep signals for room impulse response measurements.'
   },
   {
+    icon: '🎚️',
+    title: 'Audio Convolution',
+    description: 'Apply impulse responses to your audio files using real-time convolution in your browser.'
+  },
+  {
     icon: '📈',
     title: 'Advanced Parameters',
     description: 'Extract acoustic parameters like RT60, EDT, Clarity, and Definition from your impulse responses.'
@@ -42,9 +47,13 @@ const features = [
           Upload your IR files or generate sweep signals for acoustic measurements.
         </p>
         <div class="hero-buttons">
-          <button @click="router.push('/rir')" class="btn btn-primary">
+          <button @click="router.push('/analysis')" class="btn btn-primary">
             <span class="btn-icon">📊</span>
             Start Analysis
+          </button>
+          <button @click="router.push('/convolve')" class="btn btn-secondary">
+            <span class="btn-icon">🎚️</span>
+            Convolve Audio
           </button>
           <button @click="router.push('/signal')" class="btn btn-secondary">
             <span class="btn-icon">🔊</span>

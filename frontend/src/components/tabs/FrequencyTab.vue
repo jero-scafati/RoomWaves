@@ -19,7 +19,7 @@ const props = defineProps({
 // ============================================================================
 // EMITS
 // ============================================================================
-const emit = defineEmits(['toggle', 'update:selectedBands']);
+const emit = defineEmits(['update:selectedBands']);
 </script>
 
 <template>
@@ -37,9 +37,6 @@ const emit = defineEmits(['toggle', 'update:selectedBands']);
           </option>
         </select>
       </div>
-      <button @click="emit('toggle')" :disabled="isLoading">
-        {{ isVisible ? 'Clear' : 'Plot' }}
-      </button>
     </div>
     
     <div class="chart-container">
@@ -51,7 +48,7 @@ const emit = defineEmits(['toggle', 'update:selectedBands']);
       </div>
       <FrequencyChart v-else-if="isVisible" :chartData="chartData" />
       <div v-else class="status-message">
-        <p>Select bands and click "Plot" to see the frequency response.</p>
+        <p>Loading frequency response data...</p>
       </div>
     </div>
   </div>
@@ -111,27 +108,6 @@ select:hover {
 select:focus {
   outline: none;
   border-color: #3b82f6;
-}
-
-button {
-  background-color: #3b82f6;
-  color: white;
-  border: none;
-  padding: 10px 24px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-  font-weight: 500;
-  font-size: 0.95rem;
-}
-
-button:hover {
-  background-color: #2563eb;
-}
-
-button:disabled {
-  background-color: #4a4a4a;
-  cursor: not-allowed;
 }
 
 .chart-container {
