@@ -2,7 +2,7 @@
 // ============================================================================
 // IMPORTS
 // ============================================================================
-import { ref, watch } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 import ApiService from '@/services/ApiService.js';
 import AudioUploader from '@/components/AudioUploader.vue';
 import WaveformTab from '@/components/tabs/WaveformTab.vue';
@@ -21,7 +21,7 @@ import { useParameters } from '@/composables/useParameters.js';
 // ============================================================================
 // STATE
 // ============================================================================
-const uploadedFilename = ref('');
+const filePath = ref('');
 const activeTab = ref('waveform');
 
 // Initialize composables
@@ -31,11 +31,17 @@ const spectrogram = useSpectrogram();
 const surface3d = useSurface3D();
 const parameters = useParameters();
 
+// Pre-select Clifford Tower example on mount
+onMounted(() => {
+  // Automatically select the Clifford Tower example
+  handleExampleSelected('clifford_tower_ir.wav');
+});
+
 // ============================================================================
 // EVENT HANDLERS
 // ============================================================================
-const handleUploadSuccess = (filename) => {
-  uploadedFilename.value = filename;
+const handleUploadSuccess = (path) => {
+  filePath.value = path;
   // Clear all plots
   waveform.clear();
   frequency.clear();
@@ -46,38 +52,19 @@ const handleUploadSuccess = (filename) => {
   fetchDataForActiveTab();
 };
 
-const handleExampleSelected = async (filename) => {
-  // For examples, we need to fetch the file and upload it to backend for analysis
-  try {
-    // Fetch the example file from public folder
-    const response = await fetch(`/examples/${filename}`);
-    if (!response.ok) {
-      console.error('Failed to fetch example file');
-      return;
-    }
-    
-    // Convert to File object
-    const blob = await response.blob();
-    const file = new File([blob], filename, { type: blob.type });
-    
-    // Upload to backend
-    const uploadResponse = await ApiService.uploadFile(file);
-    
-    // Use the uploaded filename
-    uploadedFilename.value = uploadResponse.data.filename;
-    
-    // Clear all plots
-    waveform.clear();
-    frequency.clear();
-    spectrogram.clear();
-    surface3d.clear();
-    parameters.clear();
-    
-    // Automatically fetch data for the current active tab
-    fetchDataForActiveTab();
-  } catch (err) {
-    console.error('Failed to process example file:', err);
-  }
+const handleExampleSelected = (filename) => {
+  // For examples, construct the full path directly
+  filePath.value = `examples/${filename}`;
+  
+  // Clear all plots
+  waveform.clear();
+  frequency.clear();
+  spectrogram.clear();
+  surface3d.clear();
+  parameters.clear();
+  
+  // Automatically fetch data for the current active tab
+  fetchDataForActiveTab();
 };
 
 // ============================================================================
@@ -85,7 +72,7 @@ const handleExampleSelected = async (filename) => {
 // ============================================================================
 // Watch for tab changes and automatically fetch data
 watch(activeTab, (newTab, oldTab) => {
-  if (!uploadedFilename.value) return;
+  if (!filePath.value) return;
   
   // Clear the previous tab's data
   clearTabData(oldTab);
@@ -96,22 +83,22 @@ watch(activeTab, (newTab, oldTab) => {
 
 // Watch for frequency response bands changes
 watch(() => frequency.selectedBands.value, () => {
-  if (uploadedFilename.value && activeTab.value === 'frequency' && frequency.isVisible.value) {
-    frequency.fetchData(uploadedFilename.value);
+  if (filePath.value && activeTab.value === 'frequency' && frequency.isVisible.value) {
+    frequency.fetchData(filePath.value);
   }
 });
 
 // Watch for surface3d bands changes
 watch(() => surface3d.bands.value, () => {
-  if (uploadedFilename.value && activeTab.value === 'surface' && surface3d.isVisible.value) {
-    surface3d.fetchData(uploadedFilename.value);
+  if (filePath.value && activeTab.value === 'surface' && surface3d.isVisible.value) {
+    surface3d.fetchData(filePath.value);
   }
 });
 
 // Watch for parameters bands changes
 watch(() => parameters.selectedBands.value, () => {
-  if (uploadedFilename.value && activeTab.value === 'parameters' && parameters.isVisible.value) {
-    parameters.fetchData(uploadedFilename.value);
+  if (filePath.value && activeTab.value === 'parameters' && parameters.isVisible.value) {
+    parameters.fetchData(filePath.value);
   }
 });
 
@@ -119,23 +106,23 @@ watch(() => parameters.selectedBands.value, () => {
 // HELPER METHODS
 // ============================================================================
 const fetchDataForActiveTab = () => {
-  if (!uploadedFilename.value) return;
+  if (!filePath.value) return;
   
   switch (activeTab.value) {
     case 'waveform':
-      waveform.fetchData(uploadedFilename.value);
+      waveform.fetchData(filePath.value);
       break;
     case 'frequency':
-      frequency.fetchData(uploadedFilename.value);
+      frequency.fetchData(filePath.value);
       break;
     case 'spectrogram':
-      spectrogram.fetchData(uploadedFilename.value);
+      spectrogram.fetchData(filePath.value);
       break;
     case 'surface':
-      surface3d.fetchData(uploadedFilename.value);
+      surface3d.fetchData(filePath.value);
       break;
     case 'parameters':
-      parameters.fetchData(uploadedFilename.value);
+      parameters.fetchData(filePath.value);
       break;
   }
 };
@@ -171,7 +158,7 @@ const clearTabData = (tab) => {
     />
 
     <!-- Navigation Tabs -->
-    <nav v-if="uploadedFilename" class="plot-navbar">
+    <nav v-if="filePath" class="plot-navbar">
       <button 
         class="nav-tab" 
         :class="{ active: activeTab === 'waveform' }"
@@ -210,7 +197,7 @@ const clearTabData = (tab) => {
     </nav>
 
     <!-- Plot Content Area -->
-    <section v-if="uploadedFilename" class="plot-section">
+    <section v-if="filePath" class="plot-section">
       
       <!-- Waveform Tab -->
       <WaveformTab
@@ -219,6 +206,7 @@ const clearTabData = (tab) => {
         :isLoading="waveform.isLoading.value"
         :error="waveform.error.value"
         :isVisible="waveform.isVisible.value"
+        :filePath="filePath"
       />
 
       <!-- Frequency Response Tab -->

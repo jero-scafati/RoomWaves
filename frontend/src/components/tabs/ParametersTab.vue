@@ -143,11 +143,9 @@ const downloadPDF = async () => {
       
       <div v-if="isVisible" class="download-buttons">
         <button @click="downloadCSV" class="download-btn csv-btn" :disabled="isLoading">
-          <span class="btn-icon">📊</span>
           Download CSV
         </button>
         <button @click="downloadPDF" class="download-btn pdf-btn" :disabled="isLoading">
-          <span class="btn-icon">📄</span>
           Download PDF
         </button>
       </div>

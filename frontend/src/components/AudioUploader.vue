@@ -1,11 +1,11 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import ApiService from '@/services/ApiService.js';
 
 // Source selection
-const audioSource = ref('upload');
+const audioSource = ref('example');
 const selectedFile = ref(null);
-const selectedExampleIR = ref('');
+const selectedExampleIR = ref('clifford_tower_ir.wav');
 const isLoading = ref(false);
 const uploadStatus = ref('');
 const uploadError = ref(false);
@@ -53,7 +53,7 @@ const uploadFile = async () => {
   try {
     const response = await ApiService.uploadFile(selectedFile.value);
     uploadStatus.value = `Success! File "${response.data.filename}" uploaded.`;
-    emit('upload-success', response.data.filename);
+    emit('upload-success', response.data.path);
   } catch (err) {
     uploadError.value = true;
     uploadStatus.value = 'Error uploading the file.';
@@ -106,6 +106,13 @@ const canProcess = computed(() => {
     return selectedFile.value && !isLoading.value;
   }
 });
+
+// Load preview on mount for pre-selected example
+onMounted(() => {
+  if (audioSource.value === 'example' && selectedExampleIR.value) {
+    loadPreview();
+  }
+});
 </script>
 
 <template>
@@ -139,12 +146,6 @@ const canProcess = computed(() => {
         </option>
       </select>
       
-      <!-- Audio Preview -->
-      <div v-if="audioPreviewUrl" class="audio-preview">
-        <label class="preview-label">🎵 Preview:</label>
-        <audio :src="audioPreviewUrl" controls class="preview-audio"></audio>
-      </div>
-      
       <button @click="processExample" :disabled="!canProcess" class="process-btn">
         Analyze Example
       </button>
@@ -160,12 +161,6 @@ const canProcess = computed(() => {
         accept="audio/*"
         class="file-input"
       />
-      
-      <!-- Audio Preview -->
-      <div v-if="audioPreviewUrl" class="audio-preview">
-        <label class="preview-label">🎵 Preview:</label>
-        <audio :src="audioPreviewUrl" controls class="preview-audio"></audio>
-      </div>
       
       <button @click="uploadFile" :disabled="!canProcess" class="process-btn">
         {{ isLoading ? 'Uploading...' : 'Upload and Analyze' }}

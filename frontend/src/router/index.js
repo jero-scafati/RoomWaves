@@ -27,11 +27,6 @@ const router = createRouter({
       name: 'convolve',
       component: ConvolveView,
     },
-    {
-      path: '/about',
-      name: 'about',
-      component: () => import('@/views/AboutView.vue'),
-    },
   ],
 });
 

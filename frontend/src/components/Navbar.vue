@@ -14,8 +14,7 @@ const navigateTo = (path) => {
       <!-- Left Side: Logo and Navigation -->
       <div class="navbar-left">
         <div class="logo" @click="navigateTo('/')">
-          <span class="logo-icon">🌊</span>
-          <span class="logo-text">RoomWaves</span>
+          <span class="logo-text">Roomwaves</span>
         </div>
         <div class="nav-links">
           <button @click="navigateTo('/analysis')" class="nav-button">
@@ -26,9 +25,6 @@ const navigateTo = (path) => {
           </button>
           <button @click="navigateTo('/convolve')" class="nav-button">
             Convolve
-          </button>
-          <button @click="navigateTo('/about')" class="nav-button">
-            About
           </button>
         </div>
       </div>
@@ -86,17 +82,7 @@ const navigateTo = (path) => {
 .logo {
   display: flex;
   align-items: center;
-  gap: var(--space-sm);
   cursor: pointer;
-  transition: transform var(--transition-base);
-}
-
-.logo:hover {
-  transform: scale(1.05);
-}
-
-.logo-icon {
-  font-size: var(--font-size-2xl);
 }
 
 .logo-text {
@@ -225,10 +211,6 @@ const navigateTo = (path) => {
 }
 
 @media (max-width: 480px) {
-  .logo-icon {
-    font-size: var(--font-size-2xl);
-  }
-
   .logo-text {
     font-size: var(--font-size-base);
   }

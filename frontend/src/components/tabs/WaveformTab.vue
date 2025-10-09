@@ -11,7 +11,8 @@ const props = defineProps({
   chartData: Object,
   isLoading: Boolean,
   error: String,
-  isVisible: Boolean
+  isVisible: Boolean,
+  filePath: String
 });
 
 // ============================================================================
@@ -33,6 +34,11 @@ const props = defineProps({
       <div v-else class="status-message">
         <p>Loading waveform data...</p>
       </div>
+    </div>
+    
+    <!-- Audio Player -->
+    <div v-if="isVisible && !isLoading && !error && filePath" class="audio-player-container">
+      <audio :src="`/examples/${filePath.split('/').pop()}`" controls class="audio-player"></audio>
     </div>
   </div>
 </template>
@@ -70,5 +76,19 @@ const props = defineProps({
 
 .error {
   color: #f87171;
+}
+
+.audio-player-container {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background-color: #242424;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+}
+
+.audio-player {
+  width: 100%;
+  max-width: 600px;
 }
 </style>

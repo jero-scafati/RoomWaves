@@ -24,27 +24,27 @@ export default {
     });
   },
 
-  getPlotData(filename) {
-    return apiClient.get(`/api/plot/${filename}`);
+  getPlotData(filePath) {
+    return apiClient.get(`/api/plot/${filePath}`);
   },
 
-  getFrequencyData(filename, bands) {
-    return apiClient.get(`/api/frequency-response/${filename}`, {
+  getFrequencyData(filePath, bands) {
+    return apiClient.get(`/api/frequency-response/${filePath}`, {
       params: { bands }
     });
   },
   
-  getSpectrogramData(filename) {
-    return apiClient.get(`/api/spectrogram/${filename}`);
+  getSpectrogramData(filePath) {
+    return apiClient.get(`/api/spectrogram/${filePath}`);
   },
-  getCsdData(filename, bands) {
-    return apiClient.get(`/api/csd/${filename}`, {
+  getCsdData(filePath, bands) {
+    return apiClient.get(`/api/csd/${filePath}`, {
       params: { bands }
     });
   },
   
-  getParameters(filename, bands) {
-    return apiClient.get(`/api/parameters/${filename}`, {
+  getParameters(filePath, bands) {
+    return apiClient.get(`/api/parameters/${filePath}`, {
       params: { bands }
     });
   },

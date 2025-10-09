@@ -13,11 +13,39 @@ const isLoading = ref(false);
 const error = ref(null);
 const signalData = ref(null);
 
+// Preset configurations
+const presets = [
+  { name: 'Standard Quality (44.1kHz)', duration: 10, f_inf: 20, f_sup: 20000, fs: 44100 },
+  { name: 'High Quality (48kHz)', duration: 10, f_inf: 20, f_sup: 24000, fs: 48000 },
+  { name: 'Quick Test (5s)', duration: 5, f_inf: 20, f_sup: 20000, fs: 44100 },
+  { name: 'Ultra High Quality (96kHz)', duration: 10, f_inf: 20, f_sup: 40000, fs: 96000 },
+  { name: 'Custom', duration: 10, f_inf: 20, f_sup: 20000, fs: 44100 }
+];
+
+const selectedPreset = ref(0);
+const showAdvancedSettings = ref(false);
+
 // Parameters from query string with defaults
 const duration = ref(parseFloat(route.query.duration) || 10);
 const f_inf = ref(parseInt(route.query.f_inf) || 20);
 const f_sup = ref(parseInt(route.query.f_sup) || 20000);
 const fs = ref(parseInt(route.query.fs) || 44100);
+
+const applyPreset = () => {
+  if (selectedPreset.value === presets.length - 1) {
+    // Custom option selected - show advanced settings
+    showAdvancedSettings.value = true;
+    return;
+  }
+  
+  const preset = presets[selectedPreset.value];
+  duration.value = preset.duration;
+  f_inf.value = preset.f_inf;
+  f_sup.value = preset.f_sup;
+  fs.value = preset.fs;
+  showAdvancedSettings.value = false;
+  generateNewSignals();
+};
 
 // ============================================================================
 // METHODS
@@ -92,69 +120,88 @@ watch(
       <div class="card">
         <div class="card-header">
           <h5 class="mb-0">
-            <i class="icon">⚙️</i> Signal Parameters
+            Signal Configuration
           </h5>
         </div>
         <div class="card-body">
-          <div class="parameters-grid">
-            <div class="param-field">
-              <label for="duration">Duration (s)</label>
-              <input
-                id="duration"
-                v-model.number="duration"
-                type="number"
-                step="0.1"
-                min="0.1"
-                max="60"
-                class="form-control"
-              />
-            </div>
-            <div class="param-field">
-              <label for="f_inf">Lower Frequency (Hz)</label>
-              <input
-                id="f_inf"
-                v-model.number="f_inf"
-                type="number"
-                step="1"
-                min="1"
-                max="24000"
-                class="form-control"
-              />
-            </div>
-            <div class="param-field">
-              <label for="f_sup">Upper Frequency (Hz)</label>
-              <input
-                id="f_sup"
-                v-model.number="f_sup"
-                type="number"
-                step="1"
-                min="1"
-                max="48000"
-                class="form-control"
-              />
-            </div>
-            <div class="param-field">
-              <label for="fs">Sample Rate (Hz)</label>
-              <input
-                id="fs"
-                v-model.number="fs"
-                type="number"
-                step="1"
-                min="8000"
-                max="96000"
-                class="form-control"
-              />
-            </div>
-          </div>
-          <div class="button-container">
-            <button
-              @click="generateNewSignals"
+          <!-- Preset Selector -->
+          <div class="preset-selector">
+            <label for="preset-select" class="preset-label">Choose Configuration:</label>
+            <select 
+              id="preset-select"
+              v-model="selectedPreset" 
+              @change="applyPreset"
+              class="preset-dropdown"
               :disabled="isLoading"
-              class="btn btn-primary"
             >
-              <span v-if="isLoading">⏳ Generating...</span>
-              <span v-else>🔄 Generate Signals</span>
-            </button>
+              <option v-for="(preset, index) in presets" :key="index" :value="index">
+                {{ preset.name }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Advanced Settings (shown when Custom is selected) -->
+          <div v-if="showAdvancedSettings" class="advanced-settings">
+            <div class="parameters-grid">
+              <div class="param-field">
+                <label for="duration">Duration (s)</label>
+                <input
+                  id="duration"
+                  v-model.number="duration"
+                  type="number"
+                  step="0.1"
+                  min="0.1"
+                  max="60"
+                  class="form-control"
+                />
+              </div>
+              <div class="param-field">
+                <label for="f_inf">Lower Frequency (Hz)</label>
+                <input
+                  id="f_inf"
+                  v-model.number="f_inf"
+                  type="number"
+                  step="1"
+                  min="1"
+                  max="24000"
+                  class="form-control"
+                />
+              </div>
+              <div class="param-field">
+                <label for="f_sup">Upper Frequency (Hz)</label>
+                <input
+                  id="f_sup"
+                  v-model.number="f_sup"
+                  type="number"
+                  step="1"
+                  min="1"
+                  max="48000"
+                  class="form-control"
+                />
+              </div>
+              <div class="param-field">
+                <label for="fs">Sample Rate (Hz)</label>
+                <input
+                  id="fs"
+                  v-model.number="fs"
+                  type="number"
+                  step="1"
+                  min="8000"
+                  max="96000"
+                  class="form-control"
+                />
+              </div>
+            </div>
+            <div class="button-container">
+              <button
+                @click="generateNewSignals"
+                :disabled="isLoading"
+                class="btn btn-primary"
+              >
+                <span v-if="isLoading">Generating...</span>
+                <span v-else>Generate Signals</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -179,7 +226,7 @@ watch(
           <div class="card-header-signal">
             <div class="header-content">
               <h5 class="mb-0">
-                <i class="icon">📈</i> Direct Sweep
+                Direct Sweep
               </h5>
               <span class="badge">Sweep</span>
             </div>
@@ -199,7 +246,7 @@ watch(
               :download="signalData.filename_sweep"
               class="btn btn-download"
             >
-              <i class="icon">⬇️</i> Download Sweep
+              Download Sweep
             </a>
           </div>
         </div>
@@ -209,7 +256,7 @@ watch(
           <div class="card-header-signal">
             <div class="header-content">
               <h5 class="mb-0">
-                <i class="icon">📉</i> Inverse Sweep
+                Inverse Sweep
               </h5>
               <span class="badge">Inverse</span>
             </div>
@@ -229,7 +276,7 @@ watch(
               :download="signalData.filename_inverse"
               class="btn btn-download"
             >
-              <i class="icon">⬇️</i> Download Inverse
+              Download Inverse
             </a>
           </div>
         </div>
@@ -238,7 +285,6 @@ watch(
       <!-- Info Card -->
       <div class="info-card">
         <div class="info-content">
-          <div class="info-icon">ℹ️</div>
           <div class="info-text">
             <strong>How to use these signals?</strong>
             <p class="mb-0">
@@ -305,6 +351,65 @@ watch(
 
 .card-body {
   padding: 1.5rem;
+}
+
+/* Preset Selector */
+.preset-selector {
+  margin-bottom: 1.5rem;
+}
+
+.preset-label {
+  display: block;
+  color: #e0e0e0;
+  font-size: 1rem;
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+}
+
+.preset-dropdown {
+  width: 100%;
+  padding: 0.875rem;
+  background-color: #2a2a2a;
+  border: 2px solid #3a3a3a;
+  border-radius: 8px;
+  color: #e0e0e0;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.preset-dropdown:hover:not(:disabled) {
+  border-color: #3b82f6;
+}
+
+.preset-dropdown:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.preset-dropdown:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Advanced Settings */
+.advanced-settings {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #3a3a3a;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .parameters-grid {
@@ -507,14 +612,7 @@ watch(
 }
 
 .info-content {
-  display: flex;
-  gap: 1rem;
-  align-items: flex-start;
-}
-
-.info-icon {
-  font-size: 1.5rem;
-  flex-shrink: 0;
+  display: block;
 }
 
 .info-text {

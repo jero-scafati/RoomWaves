@@ -478,7 +478,7 @@ const reset = () => {
     <div class="container">
       <!-- Header -->
       <header class="header">
-        <h1>🎚️ Audio Convolution</h1>
+        <h1>Audio Convolution</h1>
         <p class="subtitle">
           Apply impulse responses to your audio files using real-time convolution
         </p>
@@ -521,7 +521,7 @@ const reset = () => {
             
             <!-- Audio Preview -->
             <div v-if="dryAudioPreviewUrl" class="audio-preview">
-              <label class="preview-label">🎵 Preview:</label>
+              <label class="preview-label">Preview:</label>
               <audio :src="dryAudioPreviewUrl" controls class="preview-audio"></audio>
             </div>
             <div v-else-if="isLoadingDryPreview" class="loading-preview">
@@ -540,7 +540,6 @@ const reset = () => {
                 :disabled="isProcessing"
               />
               <label for="dry-audio-file" class="file-input-label">
-                <span class="file-icon">📁</span>
                 <span v-if="!uploadedDryAudioFile">Choose Audio File</span>
                 <span v-else class="file-name">{{ uploadedDryAudioFile.name }}</span>
               </label>
@@ -551,7 +550,7 @@ const reset = () => {
             
             <!-- Audio Preview -->
             <div v-if="dryAudioPreviewUrl" class="audio-preview">
-              <label class="preview-label">🎵 Preview:</label>
+              <label class="preview-label">Preview:</label>
               <audio :src="dryAudioPreviewUrl" controls class="preview-audio"></audio>
             </div>
           </div>
@@ -591,7 +590,7 @@ const reset = () => {
             
             <!-- Audio Preview -->
             <div v-if="irPreviewUrl" class="audio-preview">
-              <label class="preview-label">🎵 Preview:</label>
+              <label class="preview-label">Preview:</label>
               <audio :src="irPreviewUrl" controls class="preview-audio"></audio>
             </div>
             <div v-else-if="isLoadingIRPreview" class="loading-preview">
@@ -610,7 +609,6 @@ const reset = () => {
                 :disabled="isProcessing"
               />
               <label for="ir-file" class="file-input-label">
-                <span class="file-icon">📁</span>
                 <span v-if="!uploadedIRFile">Choose IR File</span>
                 <span v-else class="file-name">{{ uploadedIRFile.name }}</span>
               </label>
@@ -621,7 +619,7 @@ const reset = () => {
             
             <!-- Audio Preview -->
             <div v-if="irPreviewUrl" class="audio-preview">
-              <label class="preview-label">🎵 Preview:</label>
+              <label class="preview-label">Preview:</label>
               <audio :src="irPreviewUrl" controls class="preview-audio"></audio>
             </div>
           </div>
@@ -634,7 +632,6 @@ const reset = () => {
             :disabled="!canConvolve"
             class="btn btn-primary btn-large"
           >
-            <span class="btn-icon">🎛️</span>
             {{ isProcessing ? 'Processing...' : 'Convolve Audio' }}
           </button>
         </section>
@@ -651,19 +648,16 @@ const reset = () => {
           
           <!-- Error Message -->
           <div v-else-if="error" class="error-message">
-            <span class="error-icon">⚠️</span>
             <p>{{ error }}</p>
           </div>
           
           <!-- Success Message -->
           <div v-else-if="convolvedAudioUrl" class="success-message">
-            <span class="success-icon">✅</span>
             <p>{{ processingStatus }}</p>
           </div>
           
           <!-- Idle State -->
           <div v-else class="idle-state">
-            <span class="idle-icon">🎵</span>
             <p>Select an audio file and impulse response to begin</p>
           </div>
         </section>
@@ -680,11 +674,9 @@ const reset = () => {
           <!-- Download Button -->
           <div class="action-buttons">
             <button @click="downloadAudio" class="btn btn-success">
-              <span class="btn-icon">💾</span>
               Download Convolved Audio
             </button>
             <button @click="reset" class="btn btn-secondary">
-              <span class="btn-icon">🔄</span>
               Process Another
             </button>
           </div>
@@ -692,7 +684,7 @@ const reset = () => {
 
         <!-- Info Section -->
         <section class="card info-section">
-          <h3 class="info-title">ℹ️ How it Works</h3>
+          <h3 class="info-title">How it Works</h3>
           <ul class="info-list">
             <li>Select dry audio (predetermined or upload your own)</li>
             <li>Select impulse response (predetermined or upload your own)</li>

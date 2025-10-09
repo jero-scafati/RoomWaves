@@ -7,14 +7,13 @@ const currentYear = new Date().getFullYear();
     <div class="footer-container">
       <div class="footer-content">
         <div class="footer-logo">
-          <span class="logo-icon">🌊</span>
-          <span class="logo-text">RoomWaves</span>
+          <span class="logo-text">Roomwaves</span>
         </div>
         <p class="footer-description">
           Advanced impulse response analysis and signal generation for room acoustics
         </p>
         <p class="footer-copyright">
-          © {{ currentYear }} RoomWaves. All rights reserved.
+          © {{ currentYear }} Roomwaves. All rights reserved.
         </p>
       </div>
     </div>
@@ -39,14 +38,10 @@ const currentYear = new Date().getFullYear();
 }
 
 .footer-logo {
-  display: inline-flex;
+  display: flex;
+  justify-content: center;
   align-items: center;
-  gap: var(--space-sm);
   margin-bottom: var(--space-md);
-}
-
-.logo-icon {
-  font-size: var(--font-size-2xl);
 }
 
 .logo-text {
