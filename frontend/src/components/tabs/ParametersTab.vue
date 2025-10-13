@@ -41,7 +41,7 @@ const parameterNames = [
   { key: 'EDT', label: 'EDT (s)', description: 'Early Decay Time' },
   { key: 'T60_from_T20', label: 'T20 (s)', description: 'Reverberation Time from T20' },
   { key: 'T60_from_T30', label: 'T30 (s)', description: 'Reverberation Time from T30' },
-  { key: 'C80', label: 'C80 (dB)', description: 'Clarity Index' },
+  { key: 'C50', label: 'C50 (dB)', description: 'Clarity Index' },
   { key: 'D50', label: 'D50 (%)', description: 'Definition' }
 ];
 
@@ -192,7 +192,7 @@ const downloadPDF = async () => {
             <li><strong>EDT:</strong> Early Decay Time - Time for sound to decay 10 dB from initial level</li>
             <li><strong>T20:</strong> Reverberation Time extrapolated from 5-25 dB decay</li>
             <li><strong>T30:</strong> Reverberation Time extrapolated from 5-35 dB decay</li>
-            <li><strong>C80:</strong> Clarity Index - Ratio of early (0-80ms) to late energy</li>
+            <li><strong>C50:</strong> Clarity Index - Ratio of early (0-50ms) to late energy</li>
             <li><strong>D50:</strong> Definition - Percentage of energy in first 50ms</li>
           </ul>
         </div>
