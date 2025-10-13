@@ -1,14 +1,14 @@
 from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
-    APP_NAME: str = "FastEQ"
-    APP_DESCRIPTION: str = "FastEQ is a web application for audio equalization."
+    APP_NAME: str = "Roomwaves"
+    APP_DESCRIPTION: str = "Roomwaves is a web application for room acoustics analysis."
     APP_VERSION: str = "1.0.0"
     
     # CORS settings
     ALLOWED_ORIGINS: list[str] = [
         "http://localhost:5173",
-        "https://fasteq.vercel.app"
+        "https://roomwaves.vercel.app"
     ]
 
     # S3/R2 settings
