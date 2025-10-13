@@ -1,5 +1,5 @@
 # 1. Start from an official, slim Python base image
-FROM python:3.10-slim
+FROM python:3.11-slim
 
 # 2. Set environment variables for best practices
 ENV PYTHONUNBUFFERED=1 \
