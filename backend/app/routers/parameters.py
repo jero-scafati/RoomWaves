@@ -12,19 +12,12 @@ class BandsPerOctave(int, Enum):
     one = 1
     three = 3
 
-from app.services.get_parameters import process_impulse_response
-
-
-router = APIRouter()
-
-@router.get("/parameters/{filename}")
+@router.get("/parameters/{file_path:path}")
 async def get_acoustic_parameters(
-    filename: str,
+    file_path: str,
     bands: BandsPerOctave = BandsPerOctave.one):
     
-    file_key = f"uploads/{filename}"
-    
-    file_stream = download_file_from_s3(file_key)
+    file_stream = download_file_from_s3(file_path)
     y, fs = librosa.load(file_stream, sr=None, mono=True)
     
     results = process_impulse_response(
