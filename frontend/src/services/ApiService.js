@@ -49,6 +49,10 @@ export default {
     });
   },
 
+  getSNR(filePath) {
+    return apiClient.get(`/api/snr/${filePath}`);
+  },
+
   getSignalData(params) {
     return apiClient.get('/api/signal', {
       params: {

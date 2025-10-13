@@ -13,7 +13,7 @@ class BandpassFilter(SignalProcessor):
     """
     Processor to filter the impulse response signal into frequency bands.
     """
-    def __init__(self, fs: int, filter_type: int = 1, filter_order: int = 4):
+    def __init__(self, fs: int, filter_type: int = 1, filter_order: int = 12):
         super().__init__(fs)
         self.filter_type = filter_type
         self.filter_order = filter_order

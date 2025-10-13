@@ -70,21 +70,26 @@ class DecayAnalyzer(SignalProcessor):
             prev_crossover = crossover_time
             
         crossover_index = int(round(crossover_time * self.fs))
-        return {'crossover_index': crossover_index}
+        noise_start_index_final = max(0, min(len(impulse_response), int((noise_level + 7.5 - intercept) / slope * self.fs) if slope != 0 else len(impulse_response)))
+        return {'crossover_index': crossover_index, 'noise_start_index': noise_start_index_final}
 
     def process(self, data: dict) -> dict:
         envelopes = data['envelopes']
         decay_curves = {}
         decay_curves_db = {}
+        lundeby_data = {}
         
         for freq, envelope in envelopes.items():
             crossover_data = self._lundeby_crossover(envelope)
             crossover_index = crossover_data['crossover_index']
+            noise_start_index = crossover_data['noise_start_index']
             
             schroeder_data = self._schroeder_integral(envelope, self.fs, crossover_index)
             decay_curves[freq] = schroeder_data
             decay_curves_db[freq] = to_db_scale(schroeder_data['schroeder_curve'])
+            lundeby_data[freq] = {'noise_start_index': noise_start_index}
 
         data['decay_curves'] = decay_curves
         data['decay_curves_db'] = decay_curves_db
+        data['lundeby_data'] = lundeby_data
         return data

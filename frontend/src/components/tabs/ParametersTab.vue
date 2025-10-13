@@ -36,6 +36,7 @@ const tableData = computed(() => {
     }));
 });
 
+
 const parameterNames = [
   { key: 'EDT', label: 'EDT (s)', description: 'Early Decay Time' },
   { key: 'T60_from_T20', label: 'T20 (s)', description: 'Reverberation Time from T20' },

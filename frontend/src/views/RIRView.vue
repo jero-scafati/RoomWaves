@@ -5,6 +5,7 @@
 import { ref, watch, onMounted } from 'vue';
 import ApiService from '@/services/ApiService.js';
 import AudioUploader from '@/components/AudioUploader.vue';
+import SNRCard from '@/components/SNRCard.vue';
 import WaveformTab from '@/components/tabs/WaveformTab.vue';
 import FrequencyTab from '@/components/tabs/FrequencyTab.vue';
 import SpectrogramTab from '@/components/tabs/SpectrogramTab.vue';
@@ -17,6 +18,7 @@ import { useFrequencyResponse } from '@/composables/useFrequencyResponse.js';
 import { useSpectrogram } from '@/composables/useSpectrogram.js';
 import { useSurface3D } from '@/composables/useSurface3D.js';
 import { useParameters } from '@/composables/useParameters.js';
+import { useSNR } from '@/composables/useSNR.js';
 
 // ============================================================================
 // STATE
@@ -30,6 +32,7 @@ const frequency = useFrequencyResponse();
 const spectrogram = useSpectrogram();
 const surface3d = useSurface3D();
 const parameters = useParameters();
+const snr = useSNR();
 
 // Pre-select Clifford Tower example on mount
 onMounted(() => {
@@ -48,6 +51,9 @@ const handleUploadSuccess = (path) => {
   spectrogram.clear();
   surface3d.clear();
   parameters.clear();
+  snr.clear();
+  // Fetch SNR immediately
+  snr.fetchSNR(path);
   // Automatically fetch data for the current active tab
   fetchDataForActiveTab();
 };
@@ -62,6 +68,10 @@ const handleExampleSelected = (filename) => {
   spectrogram.clear();
   surface3d.clear();
   parameters.clear();
+  snr.clear();
+  
+  // Fetch SNR immediately
+  snr.fetchSNR(filePath.value);
   
   // Automatically fetch data for the current active tab
   fetchDataForActiveTab();
@@ -155,6 +165,15 @@ const clearTabData = (tab) => {
     <AudioUploader 
       @upload-success="handleUploadSuccess"
       @example-selected="handleExampleSelected"
+    />
+
+    <!-- SNR Card -->
+    <SNRCard 
+      :snr="snr.snr.value"
+      :quality="snr.quality.value"
+      :description="snr.description.value"
+      :isLoading="snr.isLoading.value"
+      :error="snr.error.value"
     />
 
     <!-- Navigation Tabs -->
