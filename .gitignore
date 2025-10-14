@@ -6,6 +6,10 @@ __pycache__/
 *.egg-info/
 .dist/
 .windsurf/
+.pytest_cache/
+htmlcov/
+.coverage
+
 # === Node / package manager ===
 node_modules/
 .pnp/

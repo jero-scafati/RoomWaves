@@ -1,74 +1,41 @@
 # RoomWaves Backend
 
-Backend API for acoustic analysis and impulse response processing.
+FastAPI backend for acoustic analysis and impulse response processing.
 
 ## Setup
 
-Install dependencies:
 ```bash
 pip install -r requirements.txt
 ```
 
-## Running the API
+## Run
 
 ```bash
 uvicorn app.main:app --reload
 ```
 
+API available at `http://localhost:8000`
+
 ## Testing
 
-The project uses pytest for testing. Tests cover the main acoustic processing functions:
-
-### Quick Start
-
-Run all tests:
 ```bash
-pytest
+pytest              # Run all tests
+pytest -v           # Verbose output
+pytest --cov=app    # With coverage
 ```
 
-Or use the Makefile:
-```bash
-make test
-```
-
-### Test Commands
+## Docker
 
 ```bash
-pytest                    # Run all tests
-pytest -v                # Verbose output
-pytest --cov=app         # With coverage
-make test-coverage       # Coverage with HTML report
+docker build -t roomwaves-backend .
+docker run -p 8080:8080 roomwaves-backend
 ```
-
-### Test Structure
-
-```
-tests/
-├── conftest.py                    # Fixtures and synthetic RI generator
-├── test_snr.py                    # SNR calculation tests
-├── test_parameters_pipeline.py    # Acoustic parameters tests
-└── test_edge_cases.py             # Edge cases and integration tests
-```
-
-### Coverage
-
-Run tests with coverage report:
-```bash
-pytest --cov=app --cov-report=html
-```
-
-View HTML report: `open htmlcov/index.html`
 
 ## Project Structure
 
 ```
 app/
-├── core/          # Configuration
 ├── routers/       # API endpoints
-├── schemas/       # Pydantic models
 ├── services/      # Business logic
-└── utils/         # Pipeline processors
-    └── pipeline/
-        ├── orchestrator.py    # Main pipeline
-        └── processor/         # Signal processors
+└── utils/         # Signal processing pipeline
 ```
