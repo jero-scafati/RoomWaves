@@ -1,7 +1,9 @@
 # Git
 .git
 .gitignore
-
+.coverage
+.test_plot.py
+htmlcov/
 # Python
 .venv
 __pycache__/
