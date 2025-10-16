@@ -125,24 +125,26 @@ const initChart = () => {
       type: 'category',
       name: 'Frequency (Hz)',
       nameTextStyle: {
-        fontSize: 12
+        fontSize: 12,
+        color: 'rgba(255, 255, 255, 0.9)'
       },
       data: reducedF.map(formatFrequency),
       axisLabel: {
         interval: Math.floor(reducedF.length / 8),
-        fontSize: 10
+        fontSize: 10,
+        color: 'rgba(255, 255, 255, 0.8)'
       },
       axisLine: {
         lineStyle: {
-          color: '#555'
+          color: 'rgba(255, 255, 255, 0.6)'
         }
       },
       splitLine: {
         show: false,
         interval: Math.floor(reducedF.length / 8),
         lineStyle: {
-          color: '#333',
-          opacity: 0.2
+          color: 'rgba(255, 255, 255, 0.2)',
+          opacity: 0.3
         }
       }
     },
@@ -150,24 +152,26 @@ const initChart = () => {
       type: 'category',
       name: 'Time',
       nameTextStyle: {
-        fontSize: 12
+        fontSize: 12,
+        color: 'rgba(255, 255, 255, 0.9)'
       },
       data: reducedT.map(formatTime),
       axisLabel: {
         interval: Math.floor(reducedT.length / 6),
-        fontSize: 10
+        fontSize: 10,
+        color: 'rgba(255, 255, 255, 0.8)'
       },
       axisLine: {
         lineStyle: {
-          color: '#555'
+          color: 'rgba(255, 255, 255, 0.6)'
         }
       },
       splitLine: {
         show: false,
         interval: Math.floor(reducedT.length / 6),
         lineStyle: {
-          color: '#333',
-          opacity: 0.2
+          color: 'rgba(255, 255, 255, 0.2)',
+          opacity: 0.3
         }
       }
     },
@@ -175,24 +179,26 @@ const initChart = () => {
       type: 'value',
       name: 'Power (dB)',
       nameTextStyle: {
-        fontSize: 12
+        fontSize: 12,
+        color: 'rgba(255, 255, 255, 0.9)'
       },
       min: min_db,
       max: max_db,
       axisLabel: {
         formatter: '{value} dB',
-        fontSize: 10
+        fontSize: 10,
+        color: 'rgba(255, 255, 255, 0.8)'
       },
       axisLine: {
         lineStyle: {
-          color: '#555'
+          color: 'rgba(255, 255, 255, 0.6)'
         }
       },
       splitLine: {
         show: true,
         lineStyle: {
-          color: '#333',
-          opacity: 0.2
+          color: 'rgba(255, 255, 255, 0.2)',
+          opacity: 0.3
         }
       }
     },
@@ -218,7 +224,8 @@ const initChart = () => {
       },
       formatter: (value) => value.toFixed(0) + ' dB',
       textStyle: {
-        fontSize: 10
+        fontSize: 10,
+        color: 'rgba(255, 255, 255, 0.9)'
       }
     },
     series: [

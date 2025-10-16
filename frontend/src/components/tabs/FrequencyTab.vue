@@ -56,13 +56,13 @@ const emit = defineEmits(['update:selectedBands']);
 
 <style scoped>
 .tab-content {
-  animation: fadeIn 0.3s ease-in;
+  animation: fadeIn 0.4s ease;
 }
 
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(15px);
   }
   to {
     opacity: 1;
@@ -71,61 +71,83 @@ const emit = defineEmits(['update:selectedBands']);
 }
 
 .controls {
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--space-lg);
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 1.5rem;
+  gap: var(--space-lg);
   flex-wrap: wrap;
 }
 
 .control-group {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  background: rgba(24, 26, 27, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-base);
+}
+
+.control-group:hover {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(24, 26, 27, 0.5);
 }
 
 label {
-  color: #a0a0a0;
-  font-size: 0.9rem;
-  font-weight: 500;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
 }
 
 select {
-  background-color: #3a3a3a;
-  color: white;
-  border: 1px solid #5a5a5a;
-  border-radius: 6px;
-  padding: 8px 12px;
+  background: var(--color-surface-elevated);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-md);
+  padding: var(--space-sm) var(--space-md);
   cursor: pointer;
-  transition: border-color 0.2s ease;
+  transition: all var(--transition-base);
+  font-weight: var(--font-weight-medium);
 }
 
 select:hover {
-  border-color: #7a7a7a;
+  border-color: var(--color-border-lighter);
+  background: var(--color-surface-hover);
 }
 
 select:focus {
   outline: none;
-  border-color: #3b82f6;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(47, 9, 136, 0.1);
 }
 
 .chart-container {
-  padding: 1rem;
-  background-color: #242424;
-  border-radius: 8px;
+  padding: var(--space-md);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-lg);
   min-height: 420px;
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
 }
 
 .status-message {
-  color: #a0a0a0;
-  font-size: 1rem;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+}
+
+.status-message p {
+  margin: 0;
 }
 
 .error {
-  color: #f87171;
+  color: var(--color-error);
 }
 </style>

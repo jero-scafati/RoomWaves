@@ -102,11 +102,27 @@ const initChart = () => {
       type: 'line',
       data: props.chartData.datasets[0].data,
       lineStyle: {
-        color: '#3b82f6',
-        width: 1.5
+        color: '#5a1de0',
+        width: 2
+      },
+      areaStyle: {
+        color: {
+          type: 'linear',
+          x: 0,
+          y: 0,
+          x2: 0,
+          y2: 1,
+          colorStops: [{
+            offset: 0,
+            color: 'rgba(90, 29, 224, 0.3)'
+          }, {
+            offset: 1,
+            color: 'rgba(90, 29, 224, 0.05)'
+          }]
+        }
       },
       symbol: 'none',
-      sampling: 'lttb', // Down-sampling for performance with large datasets
+      sampling: 'lttb',
       smooth: false
     }]
   }

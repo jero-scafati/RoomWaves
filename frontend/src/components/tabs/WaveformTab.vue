@@ -38,20 +38,20 @@ const props = defineProps({
     
     <!-- Audio Player -->
     <div v-if="isVisible && !isLoading && !error && filePath" class="audio-player-container">
-      <audio :src="`/examples/${filePath.split('/').pop()}`" controls class="audio-player"></audio>
+      <audio :src="`/${filePath}`" controls class="audio-player"></audio>
     </div>
   </div>
 </template>
 
 <style scoped>
 .tab-content {
-  animation: fadeIn 0.3s ease-in;
+  animation: fadeIn 0.4s ease;
 }
 
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(15px);
   }
   to {
     opacity: 1;
@@ -60,35 +60,55 @@ const props = defineProps({
 }
 
 .chart-container {
-  padding: 1rem;
-  background-color: #242424;
-  border-radius: 8px;
+  padding: var(--space-md);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-lg);
   min-height: 420px;
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
 }
 
 .status-message {
-  color: #a0a0a0;
-  font-size: 1rem;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.status-message p {
+  margin: 0;
 }
 
 .error {
-  color: #f87171;
+  color: var(--color-error);
 }
 
 .audio-player-container {
-  margin-top: 1.5rem;
-  padding: 1rem;
-  background-color: #242424;
-  border-radius: 8px;
+  margin-top: var(--space-lg);
+  padding: var(--space-lg);
+  background: rgba(24, 26, 27, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-lg);
   display: flex;
   justify-content: center;
+  transition: all var(--transition-base);
+}
+
+.audio-player-container:hover {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(24, 26, 27, 0.5);
 }
 
 .audio-player {
   width: 100%;
   max-width: 600px;
+  border-radius: var(--radius-md);
 }
 </style>

@@ -205,17 +205,14 @@ const downloadPDF = async () => {
 </template>
 
 <style scoped>
-/* ============================================================================
-   ANIMATIONS
-   ============================================================================ */
 .tab-content {
-  animation: fadeIn 0.3s ease-in;
+  animation: fadeIn 0.4s ease;
 }
 
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(15px);
   }
   to {
     opacity: 1;
@@ -223,189 +220,211 @@ const downloadPDF = async () => {
   }
 }
 
-/* ============================================================================
-   LAYOUT - CONTROLS
-   ============================================================================ */
 .controls {
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--space-lg);
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 1.5rem;
+  gap: var(--space-lg);
   flex-wrap: wrap;
 }
 
 .control-group {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  background: rgba(24, 26, 27, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-base);
+}
+
+.control-group:hover {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(24, 26, 27, 0.5);
 }
 
 .download-buttons {
   display: flex;
-  gap: 0.75rem;
+  gap: var(--space-sm);
   flex-wrap: wrap;
 }
 
-/* ============================================================================
-   LAYOUT - CONTENT
-   ============================================================================ */
 .content-container {
-  padding: 1rem;
-  background-color: #242424;
-  border-radius: 8px;
+  padding: var(--space-md);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-lg);
   min-height: 420px;
+  position: relative;
 }
 
 .table-wrapper {
   width: 100%;
+  position: relative;
+  z-index: 1;
 }
 
 .table-container {
   overflow-x: auto;
-  margin-bottom: 2rem;
+  margin-bottom: var(--space-xl);
+  border-radius: var(--radius-md);
 }
 
-/* ============================================================================
-   FORM ELEMENTS
-   ============================================================================ */
 label {
-  color: #a0a0a0;
-  font-size: 0.9rem;
-  font-weight: 500;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
 }
 
 select {
-  background-color: #3a3a3a;
-  color: white;
-  border: 1px solid #5a5a5a;
-  border-radius: 6px;
-  padding: 8px 12px;
+  background: var(--color-surface-elevated);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-md);
+  padding: var(--space-sm) var(--space-md);
   cursor: pointer;
-  transition: border-color 0.2s ease;
+  transition: all var(--transition-base);
+  font-weight: var(--font-weight-medium);
 }
 
 select:hover {
-  border-color: #7a7a7a;
+  border-color: var(--color-border-lighter);
+  background: var(--color-surface-hover);
 }
 
 select:focus {
   outline: none;
-  border-color: #3b82f6;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(47, 9, 136, 0.1);
 }
 
-/* ============================================================================
-   BUTTONS
-   ============================================================================ */
 .download-btn {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--space-sm);
   color: white;
   border: none;
-  padding: 10px 18px;
-  border-radius: 8px;
+  padding: var(--space-sm) var(--space-lg);
+  border-radius: var(--radius-md);
   cursor: pointer;
-  transition: all 0.2s ease;
-  font-weight: 500;
-  font-size: 0.9rem;
+  transition: all var(--transition-base);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-sm);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.download-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .download-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+  transform: none;
 }
 
 .csv-btn {
-  background-color: #10b981;
+  background: linear-gradient(135deg, #10b981, #059669);
 }
 
 .csv-btn:hover:not(:disabled) {
-  background-color: #059669;
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.4);
 }
 
 .pdf-btn {
-  background-color: #ef4444;
+  background: linear-gradient(135deg, #ef4444, #dc2626);
 }
 
 .pdf-btn:hover:not(:disabled) {
-  background-color: #dc2626;
+  box-shadow: 0 4px 16px rgba(239, 68, 68, 0.4);
 }
 
-.btn-icon {
-  font-size: 1.1rem;
-}
-
-/* ============================================================================
-   TYPOGRAPHY - HEADERS
-   ============================================================================ */
 .table-header {
   text-align: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--space-xl);
 }
 
 .table-header h3 {
-  color: #e0e0e0;
-  font-size: 1.5rem;
-  margin: 0 0 0.5rem 0;
+  color: var(--color-text-primary);
+  font-size: var(--font-size-2xl);
+  margin: 0 0 var(--space-sm) 0;
+  font-weight: var(--font-weight-bold);
 }
 
 .subtitle {
-  color: #a0a0a0;
-  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-base);
   margin: 0;
+  font-weight: var(--font-weight-medium);
 }
 
-/* ============================================================================
-   TYPOGRAPHY - STATUS MESSAGES
-   ============================================================================ */
 .status-message {
-  color: #a0a0a0;
-  font-size: 1rem;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-base);
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 400px;
+  font-weight: var(--font-weight-medium);
 }
 
 .error {
-  color: #f87171;
+  color: var(--color-error);
 }
 
-/* ============================================================================
-   TABLE STYLES
-   ============================================================================ */
 .parameters-table {
   width: 100%;
-  border-collapse: collapse;
-  background-color: #1a1a1a;
-  border-radius: 8px;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: rgba(26, 26, 27, 0.6);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border-radius: var(--radius-md);
   overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .parameters-table thead {
-  background-color: #2a2a2a;
+  background: linear-gradient(135deg, rgba(47, 9, 136, 0.15), rgba(69, 16, 184, 0.1));
 }
 
 .parameters-table th {
-  padding: 12px 16px;
+  padding: var(--space-md) var(--space-lg);
   text-align: left;
-  color: #e0e0e0;
-  font-weight: 600;
-  font-size: 0.9rem;
-  border-bottom: 2px solid #3a3a3a;
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-sm);
+  border-bottom: 2px solid rgba(47, 9, 136, 0.3);
   white-space: nowrap;
+  position: sticky;
+  top: 0;
+  background: inherit;
+  z-index: 10;
 }
 
 .parameters-table td {
-  padding: 10px 16px;
-  color: #c0c0c0;
-  font-size: 0.9rem;
-  border-bottom: 1px solid #2a2a2a;
+  padding: var(--space-md) var(--space-lg);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all var(--transition-fast);
+}
+
+.parameters-table tbody tr {
+  transition: all var(--transition-fast);
 }
 
 .parameters-table tbody tr:hover {
-  background-color: #2a2a2a;
+  background: rgba(47, 9, 136, 0.08);
+}
+
+.parameters-table tbody tr:hover td {
+  color: var(--color-text-primary);
 }
 
 .parameters-table tbody tr:last-child td {
@@ -413,25 +432,32 @@ select:focus {
 }
 
 .freq-column {
-  font-weight: 600;
-  color: #3b82f6;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-primary-light);
   min-width: 120px;
 }
 
-/* ============================================================================
-   LEGEND
-   ============================================================================ */
 .legend {
-  background-color: #1a1a1a;
-  border-radius: 8px;
-  padding: 1.5rem;
-  border-left: 4px solid #3b82f6;
+  background: rgba(26, 26, 27, 0.6);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  border-left: 3px solid var(--color-primary);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: all var(--transition-base);
+}
+
+.legend:hover {
+  background: rgba(26, 26, 27, 0.7);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .legend h4 {
-  color: #e0e0e0;
-  font-size: 1rem;
-  margin: 0 0 1rem 0;
+  color: var(--color-text-primary);
+  font-size: var(--font-size-lg);
+  margin: 0 0 var(--space-md) 0;
+  font-weight: var(--font-weight-semibold);
 }
 
 .legend ul {
@@ -441,10 +467,20 @@ select:focus {
 }
 
 .legend li {
-  color: #a0a0a0;
-  font-size: 0.85rem;
-  margin-bottom: 0.5rem;
-  line-height: 1.5;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--space-sm);
+  line-height: var(--line-height-relaxed);
+  padding-left: var(--space-md);
+  position: relative;
+}
+
+.legend li::before {
+  content: '▸';
+  position: absolute;
+  left: 0;
+  color: var(--color-primary-light);
+  font-size: var(--font-size-sm);
 }
 
 .legend li:last-child {
@@ -452,30 +488,36 @@ select:focus {
 }
 
 .legend strong {
-  color: #3b82f6;
-  font-weight: 600;
+  color: var(--color-primary-light);
+  font-weight: var(--font-weight-semibold);
 }
 
-/* ============================================================================
-   RESPONSIVE DESIGN
-   ============================================================================ */
 @media (max-width: 768px) {
   .controls {
     flex-direction: column;
-    gap: 1rem;
+    gap: var(--space-md);
   }
   
   .download-buttons {
     justify-content: center;
+    width: 100%;
+  }
+  
+  .download-btn {
+    flex: 1;
   }
   
   .table-container {
-    font-size: 0.8rem;
+    font-size: var(--font-size-xs);
   }
   
   .parameters-table th,
   .parameters-table td {
-    padding: 8px 10px;
+    padding: var(--space-sm) var(--space-md);
+  }
+
+  .content-container {
+    padding: var(--space-md);
   }
 }
 </style>

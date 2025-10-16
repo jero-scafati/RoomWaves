@@ -39,13 +39,13 @@ const props = defineProps({
 
 <style scoped>
 .tab-content {
-  animation: fadeIn 0.3s ease-in;
+  animation: fadeIn 0.4s ease;
 }
 
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(15px);
   }
   to {
     opacity: 1;
@@ -54,21 +54,28 @@ const props = defineProps({
 }
 
 .chart-container {
-  padding: 1rem;
-  background-color: #242424;
-  border-radius: 8px;
+  padding: var(--space-md);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-lg);
   min-height: 420px;
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
 }
 
 .status-message {
-  color: #a0a0a0;
-  font-size: 1rem;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+}
+
+.status-message p {
+  margin: 0;
 }
 
 .error {
-  color: #f87171;
+  color: var(--color-error);
 }
 </style>

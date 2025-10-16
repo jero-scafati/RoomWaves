@@ -23,9 +23,6 @@ const navigateTo = (path) => {
           <button @click="navigateTo('/signal')" class="nav-button">
             Signals
           </button>
-          <button @click="navigateTo('/convolve')" class="nav-button">
-            Convolve
-          </button>
         </div>
       </div>
 

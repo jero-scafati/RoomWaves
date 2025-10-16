@@ -16,7 +16,6 @@ const props = defineProps({
     <!-- Loading State -->
     <div v-if="isLoading" class="snr-card loading">
       <div class="snr-header">
-        <span class="snr-icon">⏳</span>
         <h4>Calculating SNR...</h4>
       </div>
     </div>
@@ -24,7 +23,6 @@ const props = defineProps({
     <!-- Error State -->
     <div v-else-if="error" class="snr-card error">
       <div class="snr-header">
-        <span class="snr-icon">❌</span>
         <h4>SNR Error</h4>
       </div>
       <p class="error-message">{{ error }}</p>
@@ -33,8 +31,7 @@ const props = defineProps({
     <!-- SNR Display -->
     <div v-else-if="snr !== null" class="snr-card" :class="quality?.class">
       <div class="snr-header">
-        <span class="snr-icon">{{ quality?.icon }}</span>
-        <h4>Signal Quality (SNR)</h4>
+        <h4>Signal Quality</h4>
       </div>
       <div class="snr-content">
         <div class="snr-value">{{ snr.toFixed(1) }} dB</div>
@@ -47,14 +44,14 @@ const props = defineProps({
 
 <style scoped>
 .snr-card-wrapper {
-  margin-top: 1.5rem;
-  animation: fadeIn 0.3s ease-in;
+  margin-top: 0;
+  animation: fadeIn 0.4s ease;
 }
 
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(-10px);
+    transform: translateY(-15px);
   }
   to {
     opacity: 1;
@@ -63,119 +60,128 @@ const props = defineProps({
 }
 
 .snr-card {
-  background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
-  border-radius: 12px;
-  padding: 1.25rem;
-  border-left: 4px solid;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-  transition: transform 0.2s ease;
+  background: var(--glass-background);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border-radius: var(--radius-lg);
+  padding: var(--space-md);
+  border: 1px solid var(--glass-border);
+  border-left: 3px solid;
+  box-shadow: var(--glass-shadow);
+  transition: all var(--transition-base);
+  position: relative;
+}
+
+.snr-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: currentColor;
+  filter: brightness(1.2);
 }
 
 .snr-card:hover {
   transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  border-color: rgba(255, 255, 255, 0.15);
 }
 
 .snr-card.excellent {
-  border-left-color: #10b981;
+  color: #10b981;
 }
 
 .snr-card.good {
-  border-left-color: #3b82f6;
+  color: var(--color-primary-light);
 }
 
 .snr-card.questionable {
-  border-left-color: #f59e0b;
+  color: #f59e0b;
 }
 
 .snr-card.poor {
-  border-left-color: #ef4444;
+  color: #ef4444;
 }
 
 .snr-card.loading {
-  border-left-color: #6b7280;
+  color: #6b7280;
 }
 
 .snr-card.error {
-  border-left-color: #ef4444;
+  color: #ef4444;
 }
 
 .snr-header {
   display: flex;
   align-items: center;
-  gap: 0.625rem;
-  margin-bottom: 0.75rem;
-}
-
-.snr-icon {
-  font-size: 1.25rem;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-sm);
 }
 
 .snr-header h4 {
-  color: #e0e0e0;
-  font-size: 0.95rem;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
   margin: 0;
-  font-weight: 600;
+  font-weight: var(--font-weight-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .snr-content {
   display: flex;
   align-items: baseline;
-  gap: 0.875rem;
-  margin-bottom: 0.625rem;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-xs);
 }
 
 .snr-value {
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: #ffffff;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
 }
 
 .snr-quality {
-  font-size: 1rem;
-  font-weight: 600;
-  padding: 0.2rem 0.625rem;
-  border-radius: 6px;
-  background-color: rgba(255, 255, 255, 0.1);
-}
-
-.excellent .snr-quality {
-  color: #10b981;
-}
-
-.good .snr-quality {
-  color: #3b82f6;
-}
-
-.questionable .snr-quality {
-  color: #f59e0b;
-}
-
-.poor .snr-quality {
-  color: #ef4444;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  padding: 2px var(--space-sm);
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.08);
+  color: currentColor;
+  border: 1px solid currentColor;
+  transition: all var(--transition-base);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .snr-description {
-  color: #a0a0a0;
-  font-size: 0.85rem;
-  line-height: 1.4;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-relaxed);
+  font-weight: var(--font-weight-normal);
 }
 
 .error-message {
-  color: #f87171;
-  font-size: 0.85rem;
+  color: var(--color-error);
+  font-size: var(--font-size-sm);
   margin: 0;
+  font-weight: var(--font-weight-medium);
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   .snr-content {
     flex-direction: column;
-    gap: 0.5rem;
+    gap: var(--space-xs);
     align-items: flex-start;
   }
   
   .snr-value {
-    font-size: 1.5rem;
+    font-size: var(--font-size-lg);
+  }
+
+  .snr-card {
+    padding: var(--space-sm);
   }
 }
 </style>

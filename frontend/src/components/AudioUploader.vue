@@ -147,7 +147,7 @@ onMounted(() => {
       </select>
       
       <button @click="processExample" :disabled="!canProcess" class="process-btn">
-        Analyze Example
+        Analyze
       </button>
     </div>
     
@@ -163,7 +163,7 @@ onMounted(() => {
       />
       
       <button @click="uploadFile" :disabled="!canProcess" class="process-btn">
-        {{ isLoading ? 'Uploading...' : 'Upload and Analyze' }}
+        {{ isLoading ? 'Uploading...' : 'Analyze' }}
       </button>
     </div>
     
@@ -175,39 +175,61 @@ onMounted(() => {
 
 <style scoped>
 .upload-section {
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-xl);
-  padding: var(--space-xl);
-  box-shadow: var(--shadow-md);
-  margin-bottom: var(--space-xl);
+  background: var(--glass-background);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-md);
+  box-shadow: var(--glass-shadow);
+  margin-bottom: 0;
+  transition: all var(--transition-base);
+  position: relative;
+}
+
+.upload-section:hover {
+  border-color: rgba(255, 255, 255, 0.15);
 }
 
 .upload-section h2 {
-  font-size: var(--font-size-xl);
+  font-size: var(--font-size-base);
   font-weight: var(--font-weight-semibold);
-  margin-bottom: var(--space-lg);
+  margin-bottom: var(--space-sm);
   color: var(--color-text-primary);
+  position: relative;
+  z-index: 1;
 }
 
 .source-selector {
   display: flex;
-  gap: var(--space-lg);
-  margin-bottom: var(--space-lg);
-  padding: var(--space-md);
-  background-color: var(--color-surface-elevated);
-  border-radius: var(--radius-lg);
+  gap: var(--space-md);
+  margin-bottom: var(--space-sm);
+  padding: var(--space-xs) var(--space-sm);
+  background: rgba(31, 33, 35, 0.4);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  position: relative;
+  z-index: 1;
 }
 
 .radio-option {
   display: flex;
   align-items: center;
-  gap: var(--space-sm);
+  gap: var(--space-xs);
   cursor: pointer;
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  transition: all var(--transition-base);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-md);
+}
+
+.radio-option:hover {
   color: var(--color-text-primary);
-  transition: color var(--transition-base);
+  background: rgba(255, 255, 255, 0.03);
 }
 
 .radio-option input[type="radio"] {
@@ -218,108 +240,120 @@ onMounted(() => {
 }
 
 .radio-option:has(input:checked) {
-  color: var(--color-primary);
+  color: var(--color-primary-light);
+  background: rgba(47, 9, 136, 0.1);
 }
 
 .input-group {
-  animation: fadeIn var(--transition-base);
+  animation: fadeIn 0.4s ease;
+  position: relative;
+  z-index: 1;
 }
 
 .input-label {
   display: block;
-  font-weight: var(--font-weight-medium);
+  font-weight: var(--font-weight-semibold);
   margin-bottom: var(--space-sm);
   color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
 }
 
 .select-input {
   width: 100%;
-  padding: var(--space-md);
-  background-color: var(--color-surface-elevated);
+  padding: var(--space-sm);
+  background: var(--color-surface-elevated);
   color: var(--color-text-primary);
   border: 1px solid var(--color-border-light);
   border-radius: var(--radius-md);
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-sm);
   cursor: pointer;
-  transition: border-color var(--transition-base);
-  margin-bottom: var(--space-md);
+  transition: all var(--transition-base);
+  margin-bottom: var(--space-sm);
+  font-weight: var(--font-weight-medium);
 }
 
 .select-input:hover {
   border-color: var(--color-border-lighter);
+  background: var(--color-surface-hover);
 }
 
 .select-input:focus {
   outline: none;
   border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(47, 9, 136, 0.15);
 }
 
 .file-input {
   width: 100%;
-  padding: var(--space-md);
-  background-color: var(--color-surface-elevated);
+  padding: var(--space-sm);
+  background: var(--color-surface-elevated);
   color: var(--color-text-primary);
   border: 1px solid var(--color-border-light);
   border-radius: var(--radius-md);
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-sm);
   cursor: pointer;
-  margin-bottom: var(--space-md);
+  margin-bottom: var(--space-sm);
+  transition: all var(--transition-base);
+}
+
+.file-input:hover {
+  border-color: var(--color-border-lighter);
 }
 
 .file-input::-webkit-file-upload-button {
-  background-color: var(--color-primary);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover));
   color: white;
   padding: var(--space-sm) var(--space-md);
   border: none;
   border-radius: var(--radius-md);
   cursor: pointer;
-  font-weight: var(--font-weight-medium);
+  font-weight: var(--font-weight-semibold);
   margin-right: var(--space-md);
+  transition: all var(--transition-base);
 }
 
 .file-input::-webkit-file-upload-button:hover {
-  background-color: var(--color-primary-hover);
-}
-
-.audio-preview {
-  margin-bottom: var(--space-md);
-  padding: var(--space-md);
-  background-color: var(--color-surface-elevated);
-  border-radius: var(--radius-md);
-  border: 1px solid var(--color-border-light);
-}
-
-.preview-label {
-  display: block;
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text-secondary);
-  margin-bottom: var(--space-sm);
-}
-
-.preview-audio {
-  width: 100%;
-  height: 40px;
-  border-radius: var(--radius-md);
-  background-color: var(--color-surface);
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(47, 9, 136, 0.3);
 }
 
 .process-btn {
   width: 100%;
-  padding: var(--space-md) var(--space-xl);
-  font-size: var(--font-size-base);
+  padding: var(--space-sm) var(--space-md);
+  font-size: var(--font-size-sm);
   font-weight: var(--font-weight-semibold);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-md);
   border: none;
   cursor: pointer;
   transition: all var(--transition-base);
   background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%);
   color: white;
+  box-shadow: 0 2px 8px rgba(47, 9, 136, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.process-btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.process-btn:hover:not(:disabled)::before {
+  width: 300px;
+  height: 300px;
 }
 
 .process-btn:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-glow);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(47, 9, 136, 0.4);
 }
 
 .process-btn:disabled {
@@ -330,14 +364,20 @@ onMounted(() => {
 
 .success {
   color: var(--color-success);
-  font-weight: var(--font-weight-medium);
+  font-weight: var(--font-weight-semibold);
   margin-top: var(--space-md);
+  font-size: var(--font-size-sm);
+  text-align: center;
+  animation: fadeIn 0.3s ease;
 }
 
 .error {
   color: var(--color-error);
-  font-weight: var(--font-weight-medium);
+  font-weight: var(--font-weight-semibold);
   margin-top: var(--space-md);
+  font-size: var(--font-size-sm);
+  text-align: center;
+  animation: fadeIn 0.3s ease;
 }
 
 @keyframes fadeIn {
@@ -351,10 +391,26 @@ onMounted(() => {
   }
 }
 
+@keyframes float {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  33% {
+    transform: translate(30px, -30px) rotate(120deg);
+  }
+  66% {
+    transform: translate(-20px, 20px) rotate(240deg);
+  }
+}
+
 @media (max-width: 768px) {
   .source-selector {
     flex-direction: column;
-    gap: var(--space-md);
+    gap: var(--space-sm);
+  }
+
+  .upload-section {
+    padding: var(--space-sm);
   }
 }
 </style>

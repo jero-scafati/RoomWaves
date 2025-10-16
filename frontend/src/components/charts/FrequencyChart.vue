@@ -127,21 +127,21 @@ const initChart = () => {
         handleIcon: 'path://M512,512m-16,0a16,16,0,1,0,32,0a16,16,0,1,0,-32,0',
         handleSize: '80%',
         handleStyle: {
-          color: '#10b981',
-          borderColor: '#10b981'
+          color: '#5a1de0',
+          borderColor: '#5a1de0'
         },
         textStyle: {
           color: 'rgba(255, 255, 255, 0.7)'
         },
         borderColor: 'rgba(255, 255, 255, 0.1)',
-        fillerColor: 'rgba(16, 185, 129, 0.2)',
+        fillerColor: 'rgba(90, 29, 224, 0.2)',
         backgroundColor: 'rgba(255, 255, 255, 0.05)',
         dataBackground: {
           lineStyle: {
-            color: 'rgba(16, 185, 129, 0.3)'
+            color: 'rgba(90, 29, 224, 0.3)'
           },
           areaStyle: {
-            color: 'rgba(16, 185, 129, 0.1)'
+            color: 'rgba(90, 29, 224, 0.1)'
           }
         }
       }
@@ -189,29 +189,27 @@ const initChart = () => {
       type: 'line',
       data: fullData,
       lineStyle: {
-        color: '#10b981',
+        color: '#5a1de0',
         width: 2.5
       },
-      smooth: 0.3, // Smooth the line
+      smooth: 0.3,
       symbol: 'none',
       emphasis: {
         focus: 'series',
         lineStyle: {
-          width: 3
+          width: 3,
+          shadowBlur: 10,
+          shadowColor: 'rgba(90, 29, 224, 0.5)'
         }
       },
-      // Animation settings for progressive drawing
       animation: true,
-      animationDuration: 2000, // 2 seconds to draw the full line
+      animationDuration: 2000,
       animationEasing: 'linear',
-      progressive: 400, // Draw in chunks for smooth animation
+      progressive: 400,
       progressiveThreshold: 1000,
-      // Create drawing effect
       animationDelay: function (idx) {
-        // Delay each point slightly to create drawing effect
         return idx * 2;
       },
-      // Add glow effect
       areaStyle: {
         color: {
           type: 'linear',
@@ -222,11 +220,11 @@ const initChart = () => {
           colorStops: [
             {
               offset: 0,
-              color: 'rgba(16, 185, 129, 0.1)'
+              color: 'rgba(90, 29, 224, 0.2)'
             },
             {
               offset: 1,
-              color: 'rgba(16, 185, 129, 0)'
+              color: 'rgba(90, 29, 224, 0)'
             }
           ]
         }
