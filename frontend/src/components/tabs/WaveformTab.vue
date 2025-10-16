@@ -1,12 +1,8 @@
 <script setup>
-// ============================================================================
-// IMPORTS
-// ============================================================================
+import { ref, watch, computed } from 'vue';
 import WaveformChart from '@/components/charts/WaveformChart.vue';
+import ApiService from '@/services/ApiService.js';
 
-// ============================================================================
-// PROPS
-// ============================================================================
 const props = defineProps({
   chartData: Object,
   isLoading: Boolean,
@@ -15,10 +11,38 @@ const props = defineProps({
   filePath: String
 });
 
-// ============================================================================
-// EMITS
-// ============================================================================
-// No emits needed - automatic loading
+const audioUrl = ref('');
+const isLoadingAudio = ref(false);
+
+const isUploadedFile = computed(() => {
+  return props.filePath && props.filePath.startsWith('uploads/');
+});
+
+const fetchAudioUrl = async () => {
+  if (!props.filePath) {
+    audioUrl.value = '';
+    return;
+  }
+
+  if (isUploadedFile.value) {
+    isLoadingAudio.value = true;
+    try {
+      const response = await ApiService.getFileUrl(props.filePath);
+      audioUrl.value = response.data.url;
+    } catch (err) {
+      console.error('Error fetching audio URL:', err);
+      audioUrl.value = '';
+    } finally {
+      isLoadingAudio.value = false;
+    }
+  } else {
+    audioUrl.value = `/${props.filePath}`;
+  }
+};
+
+watch(() => props.filePath, () => {
+  fetchAudioUrl();
+}, { immediate: true });
 </script>
 
 <template>
@@ -37,8 +61,8 @@ const props = defineProps({
     </div>
     
     <!-- Audio Player -->
-    <div v-if="isVisible && !isLoading && !error && filePath" class="audio-player-container">
-      <audio :src="`/${filePath}`" controls class="audio-player"></audio>
+    <div v-if="isVisible && !isLoading && !error && audioUrl && !isLoadingAudio" class="audio-player-container">
+      <audio :src="audioUrl" controls class="audio-player"></audio>
     </div>
   </div>
 </template>

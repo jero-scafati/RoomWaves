@@ -64,13 +64,7 @@ export default {
     });
   },
 
-  // Get presigned URL for a file (secure access to R2)
-  getFileDownloadLink(filename) {
-    return apiClient.get(`/api/files/${filename}`);
-  },
-
-  // Get presigned URL for uploaded files
-  getUploadedFileUrl(filename) {
-    return apiClient.get(`/api/uploads/${filename}`);
+  getFileUrl(filePath) {
+    return apiClient.get(`/api/file-url/${filePath}`);
   },
 };

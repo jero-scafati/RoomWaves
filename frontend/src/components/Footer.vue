@@ -12,6 +12,14 @@ const currentYear = new Date().getFullYear();
         <p class="footer-description">
           Advanced impulse response analysis and signal generation for room acoustics
         </p>
+        <a 
+          href="https://drive.google.com/file/d/1YLKCTbqL_0Xz0I8lOnpCyhM1cr2EYVEZ/view?usp=sharing" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          class="paper-link"
+        >
+          Read Paper
+        </a>
         <p class="footer-copyright">
           © {{ currentYear }} Roomwaves. All rights reserved.
         </p>
@@ -57,6 +65,27 @@ const currentYear = new Date().getFullYear();
   color: var(--color-text-secondary);
   margin-bottom: var(--space-md);
   font-size: var(--font-size-sm);
+}
+
+.paper-link {
+  display: inline-block;
+  color: var(--color-primary-light);
+  font-size: var(--font-size-sm);
+  text-decoration: none;
+  margin-bottom: var(--space-md);
+  padding: var(--space-xs) var(--space-md);
+  border: 1px solid var(--color-primary);
+  border-radius: var(--radius-md);
+  font-weight: var(--font-weight-semibold);
+  transition: all 0.3s ease;
+  background: rgba(47, 9, 136, 0.1);
+}
+
+.paper-link:hover {
+  background: var(--color-primary);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(47, 9, 136, 0.3);
 }
 
 .footer-copyright {

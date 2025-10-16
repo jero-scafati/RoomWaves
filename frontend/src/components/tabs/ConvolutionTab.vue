@@ -1,5 +1,6 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
+import ApiService from '@/services/ApiService.js';
 
 // ============================================================================
 // PROPS
@@ -24,7 +25,8 @@ const convolvedAudioUrl = ref('');
 const error = ref('');
 
 const dryAudioPreviewUrl = ref('');
-const irPreviewUrl = ref('');
+const irAudioUrl = ref('');
+const isLoadingIRAudio = ref(false);
 
 const exampleAudios = ref([
   { name: 'Drums', filename: 'drums.wav' },
@@ -32,8 +34,8 @@ const exampleAudios = ref([
 ]);
 
 const exampleIRs = ref([
-  { name: 'Clifford Tower', filename: 'clifford_tower_ir.wav' },
-  { name: 'Marble Hall', filename: '1a_marble_hall.mp3' }
+  { name: 'Medium Room', filename: 'clifford_tower_ir.wav' },
+  { name: 'Large Room', filename: '1a_marble_hall.mp3' }
 ]);
 
 // ============================================================================
@@ -49,10 +51,37 @@ const canConvolve = computed(() => {
 const currentIRName = computed(() => {
   if (!props.currentIRPath || props.currentIRPath.length === 0) return 'No IR loaded';
   const filename = props.currentIRPath.split('/').pop();
-  if (filename === 'clifford_tower_ir.wav') return 'Clifford Tower';
-  if (filename === '1a_marble_hall.mp3') return 'Marble Hall';
+  if (filename === 'clifford_tower_ir.wav') return 'Medium Room';
+  if (filename === '1a_marble_hall.mp3') return 'Large Room';
   return filename;
 });
+
+// Fetch IR audio URL when currentIRPath changes
+const fetchIRAudioUrl = async () => {
+  if (!props.currentIRPath) {
+    irAudioUrl.value = '';
+    return;
+  }
+
+  if (props.currentIRPath.startsWith('uploads/')) {
+    isLoadingIRAudio.value = true;
+    try {
+      const response = await ApiService.getFileUrl(props.currentIRPath);
+      irAudioUrl.value = response.data.url;
+    } catch (err) {
+      console.error('Error fetching IR audio URL:', err);
+      irAudioUrl.value = '';
+    } finally {
+      isLoadingIRAudio.value = false;
+    }
+  } else {
+    irAudioUrl.value = `/${props.currentIRPath}`;
+  }
+};
+
+watch(() => props.currentIRPath, () => {
+  fetchIRAudioUrl();
+}, { immediate: true });
 
 // ============================================================================
 // METHODS
@@ -110,7 +139,10 @@ const handleDryAudioSourceChange = () => {
 
 const loadAudio = async (source, context) => {
   if (typeof source === 'string') {
-    const response = await fetch(source);
+    const response = await fetch(source, {
+      mode: 'cors',
+      credentials: 'omit'
+    });
     if (!response.ok) throw new Error('Failed to load audio file');
     const arrayBuffer = await response.arrayBuffer();
     return await context.decodeAudioData(arrayBuffer);
@@ -169,14 +201,20 @@ const convolveAudio = async () => {
     const drySource = dryAudioSource.value === 'example' 
       ? `/examples/${selectedExampleAudio.value}` 
       : uploadedDryAudioFile.value;
-    const irSourceUrl = `/${props.currentIRPath}`;
+    
+    let irSourceUrl = `/${props.currentIRPath}`;
+    if (props.currentIRPath && props.currentIRPath.startsWith('uploads/')) {
+      const response = await ApiService.getFileUrl(props.currentIRPath);
+      irSourceUrl = response.data.url;
+    }
     
     const dryBuffer = await loadAudio(drySource, audioContext);
     const irBuffer = await loadAudio(irSourceUrl, audioContext);
     
+    const outputLength = dryBuffer.length + irBuffer.length - 1;
     const offlineContext = new OfflineAudioContext(
       dryBuffer.numberOfChannels,
-      dryBuffer.length,
+      outputLength,
       dryBuffer.sampleRate
     );
     
@@ -231,7 +269,8 @@ const downloadAudio = () => {
       <div class="ir-info-card">
         <h3 class="card-title">Current Impulse Response</h3>
         <p class="ir-name">{{ currentIRName }}</p>
-        <audio v-if="currentIRPath" :src="`/${currentIRPath}`" controls class="audio-preview"></audio>
+        <audio v-if="irAudioUrl && !isLoadingIRAudio" :src="irAudioUrl" controls class="audio-preview"></audio>
+        <p v-else-if="isLoadingIRAudio" class="loading-text">Loading audio...</p>
       </div>
 
       <!-- Dry Audio -->
@@ -447,5 +486,12 @@ const downloadAudio = () => {
   font-size: var(--font-size-sm);
   text-align: center;
   font-weight: var(--font-weight-medium);
+}
+
+.loading-text {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  text-align: center;
+  margin: var(--space-sm) 0;
 }
 </style>

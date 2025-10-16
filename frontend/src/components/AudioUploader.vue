@@ -13,8 +13,9 @@ const emit = defineEmits(['upload-success', 'example-selected']);
 
 // Example IR files
 const exampleIRs = ref([
-  { name: 'Clifford Tower', filename: 'clifford_tower_ir.wav' },
-  { name: 'Marble Hall', filename: '1a_marble_hall.mp3' }
+  { name: 'Small Room', filename: 'audio3.wav' },
+  { name: 'Medium Room', filename: 'clifford_tower_ir.wav' },
+  { name: 'Large Room', filename: '1a_marble_hall.mp3' }
 ]);
 
 // Audio preview

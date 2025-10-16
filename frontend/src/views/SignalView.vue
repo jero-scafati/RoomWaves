@@ -107,31 +107,24 @@ watch(
 
 <template>
   <div class="signal-view">
-    <!-- Header -->
-    <header class="text-center mb-4">
+    <header class="signal-header">
       <h1 class="title">Signal Generator</h1>
-      <p class="subtitle">Generate and download sweep and inverse sweep signals</p>
+      <p class="subtitle">Generate sweep and inverse sweep signals for room acoustics measurement</p>
     </header>
 
-    <hr class="separator" />
-
-    <!-- Parameters Form -->
-    <section class="parameters-section">
-      <div class="card">
+    <section class="config-section">
+      <div class="glass-card">
         <div class="card-header">
-          <h5 class="mb-0">
-            Signal Configuration
-          </h5>
+          <h2>Configuration</h2>
         </div>
-        <div class="card-body">
-          <!-- Preset Selector -->
-          <div class="preset-selector">
-            <label for="preset-select" class="preset-label">Choose Configuration:</label>
+        <div class="card-content">
+          <div class="preset-group">
+            <label for="preset-select" class="input-label">Preset</label>
             <select 
               id="preset-select"
               v-model="selectedPreset" 
               @change="applyPreset"
-              class="preset-dropdown"
+              class="select-input"
               :disabled="isLoading"
             >
               <option v-for="(preset, index) in presets" :key="index" :value="index">
@@ -140,10 +133,9 @@ watch(
             </select>
           </div>
 
-          <!-- Advanced Settings (shown when Custom is selected) -->
           <div v-if="showAdvancedSettings" class="advanced-settings">
-            <div class="parameters-grid">
-              <div class="param-field">
+            <div class="params-grid">
+              <div class="input-group">
                 <label for="duration">Duration (s)</label>
                 <input
                   id="duration"
@@ -152,10 +144,10 @@ watch(
                   step="0.1"
                   min="0.1"
                   max="60"
-                  class="form-control"
+                  class="text-input"
                 />
               </div>
-              <div class="param-field">
+              <div class="input-group">
                 <label for="f_inf">Lower Frequency (Hz)</label>
                 <input
                   id="f_inf"
@@ -164,10 +156,10 @@ watch(
                   step="1"
                   min="1"
                   max="24000"
-                  class="form-control"
+                  class="text-input"
                 />
               </div>
-              <div class="param-field">
+              <div class="input-group">
                 <label for="f_sup">Upper Frequency (Hz)</label>
                 <input
                   id="f_sup"
@@ -176,10 +168,10 @@ watch(
                   step="1"
                   min="1"
                   max="48000"
-                  class="form-control"
+                  class="text-input"
                 />
               </div>
-              <div class="param-field">
+              <div class="input-group">
                 <label for="fs">Sample Rate (Hz)</label>
                 <input
                   id="fs"
@@ -188,93 +180,76 @@ watch(
                   step="1"
                   min="8000"
                   max="96000"
-                  class="form-control"
+                  class="text-input"
                 />
               </div>
             </div>
-            <div class="button-container">
-              <button
-                @click="generateNewSignals"
-                :disabled="isLoading"
-                class="btn btn-primary"
-              >
-                <span v-if="isLoading">Generating...</span>
-                <span v-else>Generate Signals</span>
-              </button>
-            </div>
+            <button
+              @click="generateNewSignals"
+              :disabled="isLoading"
+              class="generate-btn"
+            >
+              <span v-if="isLoading">Generating...</span>
+              <span v-else>Generate Signals</span>
+            </button>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Error Display -->
-    <div v-if="error" class="alert alert-error">
-      <strong>Error:</strong> {{ error }}
+    <div v-if="error" class="error-message">
+      {{ error }}
     </div>
 
-    <!-- Loading Indicator -->
-    <div v-if="isLoading && !signalData" class="loading-container">
+    <div v-if="isLoading && !signalData" class="loading-state">
       <div class="spinner"></div>
       <p>Generating signals...</p>
     </div>
 
-    <!-- Signal Results -->
     <section v-if="signalData && !isLoading" class="results-section">
       <div class="signals-grid">
-        <!-- Sweep Card -->
-        <div class="signal-card">
-          <div class="card-header-signal">
-            <div class="header-content">
-              <h5 class="mb-0">
-                Direct Sweep
-              </h5>
-              <span class="badge">Sweep</span>
-            </div>
+        <div class="signal-card glass-card">
+          <div class="signal-header">
+            <h3>Direct Sweep</h3>
+            <span class="signal-badge">Sweep</span>
           </div>
-          <div class="card-body-signal">
-            <div class="audio-player">
-              <audio controls class="audio-control">
+          <div class="signal-content">
+            <div class="audio-wrapper">
+              <audio controls class="audio-player">
                 <source
                   :src="`data:audio/wav;base64,${signalData.audio_sweep_b64}`"
                   type="audio/wav"
                 />
-                Your browser does not support the audio element.
               </audio>
             </div>
             <a
               :href="`data:audio/wav;base64,${signalData.audio_sweep_b64}`"
               :download="signalData.filename_sweep"
-              class="btn btn-download"
+              class="download-btn"
             >
               Download Sweep
             </a>
           </div>
         </div>
 
-        <!-- Inverse Sweep Card -->
-        <div class="signal-card">
-          <div class="card-header-signal">
-            <div class="header-content">
-              <h5 class="mb-0">
-                Inverse Sweep
-              </h5>
-              <span class="badge">Inverse</span>
-            </div>
+        <div class="signal-card glass-card">
+          <div class="signal-header">
+            <h3>Inverse Sweep</h3>
+            <span class="signal-badge inverse">Inverse</span>
           </div>
-          <div class="card-body-signal">
-            <div class="audio-player">
-              <audio controls class="audio-control">
+          <div class="signal-content">
+            <div class="audio-wrapper">
+              <audio controls class="audio-player">
                 <source
                   :src="`data:audio/wav;base64,${signalData.audio_inverse_b64}`"
                   type="audio/wav"
                 />
-                Your browser does not support the audio element.
               </audio>
             </div>
             <a
               :href="`data:audio/wav;base64,${signalData.audio_inverse_b64}`"
               :download="signalData.filename_inverse"
-              class="btn btn-download"
+              class="download-btn"
             >
               Download Inverse
             </a>
@@ -282,17 +257,12 @@ watch(
         </div>
       </div>
 
-      <!-- Info Card -->
-      <div class="info-card">
-        <div class="info-content">
-          <div class="info-text">
-            <strong>How to use these signals?</strong>
-            <p class="mb-0">
-              The direct sweep measures the impulse response of a room.
-              The inverse sweep processes the recording to obtain the impulse response.
-            </p>
-          </div>
-        </div>
+      <div class="info-card glass-card">
+        <h4>How to use</h4>
+        <p>
+          The direct sweep measures the impulse response of a room.
+          The inverse sweep processes the recording to obtain the impulse response.
+        </p>
       </div>
     </section>
   </div>
@@ -300,105 +270,320 @@ watch(
 
 <style scoped>
 .signal-view {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: var(--space-xl);
+  animation: fadeIn 0.4s ease;
+}
+
+.signal-header {
+  text-align: center;
+  margin-bottom: var(--space-xl);
 }
 
 .title {
-  font-size: 2.5rem;
-  font-weight: bold;
-  color: #e0e0e0;
-  margin-bottom: 0.5rem;
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  background: linear-gradient(135deg, var(--color-primary-light), var(--color-primary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: var(--space-sm);
 }
 
 .subtitle {
-  color: #a0a0a0;
-  font-size: 1.1rem;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-base);
 }
 
-.separator {
-  border: none;
-  border-top: 1px solid #3a3a3a;
-  margin: 2rem 0;
+.config-section {
+  margin-bottom: var(--space-xl);
 }
 
-/* Parameters Section */
-.parameters-section {
-  margin-bottom: 2rem;
-}
-
-.card {
-  background-color: #1a1a1a;
-  border-radius: 12px;
-  border: 1px solid #3a3a3a;
+.glass-card {
+  background: var(--glass-background);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--glass-shadow);
+  transition: all var(--transition-base);
   overflow: hidden;
 }
 
+.glass-card:hover {
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.45);
+}
+
 .card-header {
-  background-color: #252525;
-  padding: 1rem 1.5rem;
-  border-bottom: 1px solid #3a3a3a;
+  padding: var(--space-lg);
+  border-bottom: 1px solid var(--glass-border);
 }
 
-.card-header h5 {
-  color: #e0e0e0;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+.card-header h2 {
+  margin: 0;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
 }
 
-.card-body {
-  padding: 1.5rem;
+.card-content {
+  padding: var(--space-lg);
 }
 
-/* Preset Selector */
-.preset-selector {
-  margin-bottom: 1.5rem;
+.preset-group {
+  margin-bottom: var(--space-md);
 }
 
-.preset-label {
+.input-label {
   display: block;
-  color: #e0e0e0;
-  font-size: 1rem;
-  margin-bottom: 0.75rem;
-  font-weight: 600;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-sm);
 }
 
-.preset-dropdown {
+.select-input {
   width: 100%;
-  padding: 0.875rem;
-  background-color: #2a2a2a;
-  border: 2px solid #3a3a3a;
-  border-radius: 8px;
-  color: #e0e0e0;
-  font-size: 1rem;
+  padding: var(--space-sm) var(--space-md);
+  background: var(--color-surface-elevated);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all var(--transition-base);
 }
 
-.preset-dropdown:hover:not(:disabled) {
-  border-color: #3b82f6;
+.select-input:hover:not(:disabled) {
+  border-color: var(--color-border-lighter);
+  background: var(--color-surface-hover);
 }
 
-.preset-dropdown:focus {
+.select-input:focus {
   outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(47, 9, 136, 0.15);
 }
 
-.preset-dropdown:disabled {
+.select-input:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
-/* Advanced Settings */
 .advanced-settings {
-  margin-top: 1.5rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid #3a3a3a;
+  margin-top: var(--space-lg);
+  padding-top: var(--space-lg);
+  border-top: 1px solid var(--glass-border);
   animation: slideDown 0.3s ease;
+}
+
+.params-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.input-group label {
+  display: block;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-xs);
+}
+
+.text-input {
+  width: 100%;
+  padding: var(--space-sm);
+  background: var(--color-surface-elevated);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  transition: all var(--transition-base);
+}
+
+.text-input:hover {
+  border-color: var(--color-border-lighter);
+}
+
+.text-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(47, 9, 136, 0.15);
+}
+
+.generate-btn {
+  width: 100%;
+  padding: var(--space-md);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover));
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  box-shadow: 0 2px 8px rgba(47, 9, 136, 0.3);
+}
+
+.generate-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(47, 9, 136, 0.4);
+}
+
+.generate-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.error-message {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid var(--color-error);
+  border-radius: var(--radius-lg);
+  padding: var(--space-md);
+  color: var(--color-error);
+  margin-bottom: var(--space-lg);
+  animation: fadeIn 0.3s ease;
+}
+
+.loading-state {
+  text-align: center;
+  padding: var(--space-3xl);
+  color: var(--color-text-secondary);
+}
+
+.spinner {
+  border: 4px solid var(--color-border);
+  border-top: 4px solid var(--color-primary);
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto var(--space-md);
+}
+
+.results-section {
+  animation: fadeIn 0.4s ease;
+}
+
+.signals-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: var(--space-xl);
+  margin-bottom: var(--space-xl);
+}
+
+.signal-card {
+  transition: all var(--transition-base);
+}
+
+.signal-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 48px 0 rgba(0, 0, 0, 0.5);
+}
+
+.signal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-lg);
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.signal-header h3 {
+  margin: 0;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.signal-badge {
+  padding: var(--space-xs) var(--space-md);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover));
+  color: white;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.signal-badge.inverse {
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+}
+
+.signal-content {
+  padding: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.audio-wrapper {
+  background: var(--color-surface-elevated);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-md);
+}
+
+.audio-player {
+  width: 100%;
+  height: 40px;
+}
+
+.download-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-sm) var(--space-lg);
+  background: transparent;
+  border: 2px solid var(--color-primary);
+  color: var(--color-primary-light);
+  text-decoration: none;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  transition: all var(--transition-base);
+}
+
+.download-btn:hover {
+  background: var(--color-primary);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(47, 9, 136, 0.3);
+}
+
+.info-card {
+  padding: var(--space-lg);
+}
+
+.info-card h4 {
+  margin: 0 0 var(--space-sm) 0;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.info-card p {
+  margin: 0;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes slideDown {
@@ -412,244 +597,21 @@ watch(
   }
 }
 
-.parameters-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 1.5rem;
-}
-
-.param-field label {
-  display: block;
-  color: #b0b0b0;
-  font-size: 0.9rem;
-  margin-bottom: 0.5rem;
-  font-weight: 500;
-}
-
-.form-control {
-  width: 100%;
-  padding: 0.75rem;
-  background-color: #2a2a2a;
-  border: 1px solid #3a3a3a;
-  border-radius: 6px;
-  color: #e0e0e0;
-  font-size: 1rem;
-  transition: border-color 0.3s ease;
-}
-
-.form-control:focus {
-  outline: none;
-  border-color: #3b82f6;
-}
-
-.button-container {
-  display: flex;
-  justify-content: center;
-}
-
-.btn {
-  padding: 0.75rem 2rem;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  border: none;
-  font-size: 1rem;
-}
-
-.btn-primary {
-  background-color: #3b82f6;
-  color: white;
-}
-
-.btn-primary:hover:not(:disabled) {
-  background-color: #2563eb;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
-}
-
-.btn-primary:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-/* Alert */
-.alert {
-  padding: 1rem;
-  border-radius: 8px;
-  margin-bottom: 1.5rem;
-}
-
-.alert-error {
-  background-color: rgba(239, 68, 68, 0.1);
-  border: 1px solid #ef4444;
-  color: #fca5a5;
-}
-
-/* Loading */
-.loading-container {
-  text-align: center;
-  padding: 3rem;
-}
-
-.spinner {
-  border: 4px solid #3a3a3a;
-  border-top: 4px solid #3b82f6;
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  animation: spin 1s linear infinite;
-  margin: 0 auto 1rem;
-}
-
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
 
-/* Results Section */
-.results-section {
-  margin-top: 2rem;
-}
-
-.signals-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
-  gap: 2rem;
-  margin-bottom: 2rem;
-}
-
-.signal-card {
-  background-color: #1a1a1a;
-  border-radius: 12px;
-  border: 1px solid #3a3a3a;
-  overflow: hidden;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.signal-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-}
-
-.card-header-signal {
-  background-color: #252525;
-  padding: 1rem 1.5rem;
-  border-bottom: 1px solid #3a3a3a;
-}
-
-.header-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.header-content h5 {
-  color: #e0e0e0;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.badge {
-  background-color: #3b82f6;
-  color: white;
-  padding: 0.25rem 0.75rem;
-  border-radius: 12px;
-  font-size: 0.85rem;
-  font-weight: 600;
-}
-
-.card-body-signal {
-  padding: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.audio-player {
-  background-color: #252525;
-  border-radius: 8px;
-  padding: 1rem;
-  border: 1px solid #3a3a3a;
-}
-
-.audio-control {
-  width: 100%;
-  height: 40px;
-}
-
-.btn-download {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  background-color: transparent;
-  border: 2px solid #3b82f6;
-  color: #3b82f6;
-  text-decoration: none;
-  border-radius: 8px;
-  font-weight: 600;
-  transition: all 0.3s ease;
-}
-
-.btn-download:hover {
-  background-color: #3b82f6;
-  color: white;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-}
-
-/* Info Card */
-.info-card {
-  background-color: #1a1a1a;
-  border: 1px solid #3a3a3a;
-  border-radius: 8px;
-  padding: 1rem;
-}
-
-.info-content {
-  display: block;
-}
-
-.info-text {
-  color: #b0b0b0;
-  font-size: 0.95rem;
-}
-
-.info-text strong {
-  color: #e0e0e0;
-  display: block;
-  margin-bottom: 0.5rem;
-}
-
-.info-text p {
-  margin: 0;
-  line-height: 1.5;
-}
-
-.icon {
-  font-style: normal;
-}
-
-.mb-0 {
-  margin-bottom: 0;
-}
-
-.mb-4 {
-  margin-bottom: 1.5rem;
-}
-
-/* Responsive Design */
 @media (max-width: 768px) {
+  .signal-view {
+    padding: var(--space-md);
+  }
+
   .signals-grid {
     grid-template-columns: 1fr;
   }
 
-  .parameters-grid {
+  .params-grid {
     grid-template-columns: 1fr;
   }
 }

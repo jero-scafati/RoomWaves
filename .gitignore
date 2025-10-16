@@ -8,7 +8,8 @@ __pycache__/
 .windsurf/
 .pytest_cache/
 htmlcov/
-.coverage
+backend/.coverage
+backend/test_plot.py
 
 # === Node / package manager ===
 node_modules/

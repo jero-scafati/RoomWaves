@@ -35,8 +35,8 @@ const exampleAudios = ref([
 ]);
 
 const exampleIRs = ref([
-  { name: 'Clifford Tower', filename: 'clifford_tower_ir.wav' },
-  { name: 'Marble Hall', filename: '1a_marble_hall.mp3' }
+  { name: 'Medium Room', filename: 'clifford_tower_ir.wav' },
+  { name: 'Large Room', filename: '1a_marble_hall.mp3' }
 ]);
 
 // ============================================================================
@@ -272,8 +272,11 @@ const getIRSource = () => {
 const loadAudio = async (source, context) => {
   if (typeof source === 'string') {
     // It's a URL/path - fetch it
-    processingStatus.value = 'Loading example audio...';
-    const response = await fetch(source);
+    processingStatus.value = 'Loading audio file...';
+    const response = await fetch(source, {
+      mode: 'cors',
+      credentials: 'omit'
+    });
     if (!response.ok) {
       throw new Error('Failed to load audio file');
     }
@@ -377,9 +380,10 @@ const convolveAudio = async () => {
     
     // Create offline context for rendering
     processingStatus.value = 'Convolving audio...';
+    const outputLength = dryBuffer.length + irBuffer.length - 1;
     const offlineContext = new OfflineAudioContext(
       dryBuffer.numberOfChannels,
-      dryBuffer.length,
+      outputLength,
       dryBuffer.sampleRate
     );
     
@@ -697,7 +701,7 @@ const reset = () => {
           </div>
           
           <div class="tech-note" style="margin-top: var(--space-md);">
-            <strong>Example Files:</strong> Try the example drums or trumpet with the Clifford Tower or Marble Hall impulse responses to hear the effect!
+            <strong>Example Files:</strong> Try the example drums or trumpet with any of the room impulse responses to hear the effect!
           </div>
         </section>
       </div>

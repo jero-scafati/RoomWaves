@@ -35,9 +35,7 @@ const surface3d = useSurface3D();
 const parameters = useParameters();
 const snr = useSNR();
 
-// Pre-select Clifford Tower example on mount
 onMounted(() => {
-  // Automatically select the Clifford Tower example
   handleExampleSelected('clifford_tower_ir.wav');
 });
 
