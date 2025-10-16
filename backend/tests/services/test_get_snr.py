@@ -50,3 +50,34 @@ class TestSNRCalculation:
         
         assert snr is not None
         assert 20 < snr < 100
+    
+    def test_very_low_snr_signal(self):
+        np.random.seed(42)
+        signal_clean = np.exp(-np.linspace(0, 5, 10000))
+        noise = 0.5 * np.random.randn(10000)
+        ri = signal_clean + noise
+        
+        snr = calculate_snr(ri)
+        assert snr is not None
+        assert snr > 0
+    
+    def test_normalized_vs_unnormalized_signal(self):
+        np.random.seed(42)
+        ri_base = np.exp(-np.linspace(0, 3, 20000))
+        
+        ri_normalized = ri_base / np.max(np.abs(ri_base))
+        ri_scaled = ri_base * 100
+        
+        snr1 = calculate_snr(ri_normalized)
+        snr2 = calculate_snr(ri_scaled)
+        
+        assert abs(snr1 - snr2) < 1.0
+    
+    def test_signal_with_silence_at_start(self):
+        np.random.seed(42)
+        silence = np.zeros(5000)
+        signal = np.exp(-np.linspace(0, 3, 15000))
+        ri = np.concatenate([silence, signal])
+        
+        snr = calculate_snr(ri)
+        assert snr is not None
