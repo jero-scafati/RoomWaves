@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+import numpy as np
+import librosa
 
 from app.core.config import settings
 from app.routers import upload, plot, parameters, signal, snr
@@ -28,3 +30,10 @@ app.include_router(snr.router, prefix="/api", tags=["snr"])
 @app.get("/")
 def read_root():
     return {"message": f"Hi, welcome to {settings.APP_NAME} API! visit /docs for more information."}
+
+@app.get("/warmup")
+def warmup():
+    dummy_signal = np.random.randn(1000)
+    dummy_fft = np.fft.fft(dummy_signal)
+    result = np.abs(dummy_fft).mean()
+    return {"status": "warm", "result": float(result)}
