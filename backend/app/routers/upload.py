@@ -4,7 +4,7 @@ import uuid
 from fastapi import APIRouter, UploadFile, File, HTTPException
 
 from app.core.config import settings
-from app.services.s3_service import upload_file_to_s3
+from app.services.s3_service import upload_file_to_s3, generate_presigned_url
 
 router = APIRouter()
 
@@ -35,4 +35,11 @@ async def upload_audio_file(file: UploadFile = File(...)):
         "status": "upload successful",
         "filename": unique_filename,
         "path": file_key
+    }
+
+@router.get("/file-url/{file_path:path}")
+async def get_file_url(file_path: str):
+    presigned_url = generate_presigned_url(file_path, expiration=3600)
+    return {
+        "url": presigned_url
     }
