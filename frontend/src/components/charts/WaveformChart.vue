@@ -102,8 +102,8 @@ const initChart = () => {
       type: 'line',
       data: props.chartData.datasets[0].data,
       lineStyle: {
-        color: '#5a1de0',
-        width: 2
+        color: '#a587e8',
+        width: 1
       },
       areaStyle: {
         color: {

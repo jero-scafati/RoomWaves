@@ -2,7 +2,7 @@ from fastapi import APIRouter
 from enum import Enum
 
 from app.services.s3_service import download_file_from_s3
-from app.services.plotting import plot_waveform, plot_frequency_response, plot_spectrogram, plot_csd
+from app.services.plotting import plot_waveform, plot_frequency_response, plot_spectrogram, plot_csd, plot_envelope_db
 
 router = APIRouter()
 
@@ -21,6 +21,16 @@ async def get_plot_data(file_path: str):
     file_stream = download_file_from_s3(file_path)
     y, sr = librosa.load(file_stream, sr=None, mono=True)
     plot_data = plot_waveform(y, sr)
+    
+    return plot_data
+
+@router.get("/envelope-db/{file_path:path}")
+async def get_envelope_db_data(file_path: str):
+    import librosa
+    
+    file_stream = download_file_from_s3(file_path)
+    y, sr = librosa.load(file_stream, sr=None, mono=True)
+    plot_data = plot_envelope_db(y, sr)
     
     return plot_data
 

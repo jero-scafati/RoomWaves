@@ -39,6 +39,26 @@ onMounted(async () => {
       </div>
     </section>
 
+    <section class="demo-section">
+      <div class="demo-card">
+        <h2>See It In Action</h2>
+        <p class="demo-description">Watch how Roomwaves analyzes acoustic spaces</p>
+        <!-- Replace with your demo GIF or video -->
+        <div class="demo-placeholder">
+          <div class="placeholder-content">
+            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="5 3 19 12 5 21 5 3"></polygon>
+            </svg>
+            <p>Demo video coming soon</p>
+          </div>
+          <!-- Uncomment when you have your demo -->
+          <!-- <img src="/path-to-your-demo.gif" alt="Roomwaves Demo" class="demo-media" /> -->
+          <!-- OR for video: -->
+          <!-- <video src="/path-to-your-demo.mp4" autoplay loop muted playsinline class="demo-media"></video> -->
+        </div>
+      </div>
+    </section>
+
     <section class="features">
       <div class="feature-card">
         <h3>What is a Room Impulse Response?</h3>
@@ -129,9 +149,9 @@ onMounted(async () => {
   position: absolute;
   inset: 0;
   background: 
-    radial-gradient(circle at 20% 30%, rgba(138, 43, 226, 0.15) 0%, transparent 50%),
-    radial-gradient(circle at 80% 70%, rgba(47, 9, 136, 0.15) 0%, transparent 50%),
-    radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.08) 0%, transparent 70%);
+    radial-gradient(circle at 20% 30%, rgba(138, 43, 226, 0.28) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(74, 60, 107, 0.25) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(87, 152, 168, 0.18) 0%, transparent 70%);
   animation: float 20s ease-in-out infinite;
   z-index: 0;
 }
@@ -282,6 +302,85 @@ onMounted(async () => {
   background: rgba(47, 9, 136, 0.1);
   transform: translateY(-2px);
   border-color: var(--color-primary-light);
+}
+
+.demo-section {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 900px;
+}
+
+.demo-card {
+  background: var(--glass-background);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-2xl);
+  box-shadow: var(--glass-shadow);
+  text-align: center;
+  transition: all var(--transition-base);
+}
+
+.demo-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+}
+
+.demo-card h2 {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-sm);
+  background: linear-gradient(135deg, var(--color-primary-light), var(--color-primary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.demo-description {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-base);
+  margin-bottom: var(--space-xl);
+}
+
+.demo-placeholder {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.placeholder-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  color: var(--color-text-tertiary);
+}
+
+.placeholder-content svg {
+  opacity: 0.5;
+}
+
+.placeholder-content p {
+  font-size: var(--font-size-sm);
+  margin: 0;
+}
+
+.demo-media {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--radius-lg);
 }
 
 .features {

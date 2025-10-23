@@ -189,10 +189,10 @@ const initChart = () => {
       type: 'line',
       data: fullData,
       lineStyle: {
-        color: '#5a1de0',
+        color: '#a587e8',
         width: 2.5
       },
-      smooth: 0.3,
+      smooth: 0.5,
       symbol: 'none',
       emphasis: {
         focus: 'series',

@@ -9,10 +9,10 @@
   /* ========================================
      COLORS - Base Palette
      ======================================== */
-  --color-primary: #2F0988;
-  --color-primary-hover: #4510b8;
-  --color-primary-light: #8b5cf6;
-  --color-primary-text: #c4b5fd;
+  --color-primary: #4a3c6b;
+  --color-primary-hover: #5798a8;
+  --color-primary-light: #bcd6f8;
+  --color-primary-text: #a07ec0;
   
   --color-success: #71d687;
   --color-success-hover: #539733;
@@ -26,10 +26,10 @@
   /* ========================================
      COLORS - Backgrounds
      ======================================== */
-  --color-background: #050e14;
-  --color-background-secondary: #040b10;
-  --color-surface: #181A1B;
-  --color-surface-elevated: #1f2123;
+  --color-background: #101f2b;
+  --color-background-secondary: #050e14;
+  --color-surface: #2b2f31;
+  --color-surface-elevated: rgb(21, 28, 34);
   --color-surface-hover: #252729;
   
   /* ========================================
@@ -43,8 +43,8 @@
      COLORS - Text
      ======================================== */
   --color-text-primary: #e5e5e5;
-  --color-text-secondary: #b0b0b0;
-  --color-text-tertiary: #808082;
+  --color-text-secondary: #d7d3db;
+  --color-text-tertiary: #8d8db3;
   --color-text-disabled: #6a6a6a;
 
   /* ========================================

@@ -28,6 +28,10 @@ export default {
     return apiClient.get(`/api/plot/${filePath}`);
   },
 
+  getEnvelopeDbData(filePath) {
+    return apiClient.get(`/api/envelope-db/${filePath}`);
+  },
+
   getFrequencyData(filePath, bands) {
     return apiClient.get(`/api/frequency-response/${filePath}`, {
       params: { bands }

@@ -107,6 +107,7 @@ watch(
 
 <template>
   <div class="signal-view">
+    <div class="background-pattern"></div>
     <header class="signal-header">
       <h1 class="title">Signal Generator</h1>
       <p class="subtitle">Generate sweep and inverse sweep signals for room acoustics measurement</p>
@@ -270,24 +271,35 @@ watch(
 
 <style scoped>
 .signal-view {
+  position: relative;
   max-width: 1400px;
   margin: 0 auto;
   padding: var(--space-xl);
+  overflow: hidden;
   animation: fadeIn 0.4s ease;
 }
 
+.background-pattern {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(41, 79, 82, 0.28) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(27, 38, 85, 0.466) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(29, 130, 155, 0.068) 0%, transparent 70%);
+  z-index: 0;
+}
+
 .signal-header {
+  position: relative;
+  z-index: 1;
   text-align: center;
-  margin-bottom: var(--space-xl);
+  margin-bottom: var(--space-2xl);
 }
 
 .title {
   font-size: var(--font-size-3xl);
   font-weight: var(--font-weight-bold);
-  background: linear-gradient(135deg, var(--color-primary-light), var(--color-primary));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--color-text-primary);
   margin-bottom: var(--space-sm);
 }
 
@@ -297,6 +309,8 @@ watch(
 }
 
 .config-section {
+  position: relative;
+  z-index: 1;
   margin-bottom: var(--space-xl);
 }
 
@@ -468,6 +482,8 @@ watch(
 }
 
 .results-section {
+  position: relative;
+  z-index: 1;
   animation: fadeIn 0.4s ease;
 }
 

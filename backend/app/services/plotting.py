@@ -1,8 +1,11 @@
-from app.utils.graph import get_waveform_data, get_spectrogram_data, get_frequency_data, get_csd_data 
+from app.utils.graph import get_waveform_data, get_spectrogram_data, get_frequency_data, get_csd_data, get_envelope_db_data
 from app.utils.pipeline.processor import DecayAnalyzer, EnvelopeSmoother
 
 def plot_waveform(signal, sr: int, num_points: int = 2000) -> dict[str, list[object]]:
     return get_waveform_data(signal, sr, num_points)
+
+def plot_envelope_db(signal, sr: int, num_points: int = 2000) -> dict[str, list[object]]:
+    return get_envelope_db_data(signal, sr, num_points)
 
 def plot_frequency_response(signal, sr: int, bands_per_oct: int) -> dict:
     return get_frequency_data(signal, sr, bands_per_oct)

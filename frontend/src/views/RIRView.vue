@@ -12,9 +12,11 @@ import SpectrogramTab from '@/components/tabs/SpectrogramTab.vue';
 import Surface3DTab from '@/components/tabs/Surface3DTab.vue';
 import ParametersTab from '@/components/tabs/ParametersTab.vue';
 import ConvolutionTab from '@/components/tabs/ConvolutionTab.vue';
+import EnvelopeDbTab from '@/components/tabs/EnvelopeDbTab.vue';
 
 // Composables
 import { useWaveform } from '@/composables/useWaveform.js';
+import { useEnvelopeDb } from '@/composables/useEnvelopeDb.js';
 import { useFrequencyResponse } from '@/composables/useFrequencyResponse.js';
 import { useSpectrogram } from '@/composables/useSpectrogram.js';
 import { useSurface3D } from '@/composables/useSurface3D.js';
@@ -29,6 +31,7 @@ const activeTab = ref('waveform');
 
 // Initialize composables
 const waveform = useWaveform();
+const envelopeDb = useEnvelopeDb();
 const frequency = useFrequencyResponse();
 const spectrogram = useSpectrogram();
 const surface3d = useSurface3D();
@@ -46,6 +49,7 @@ const handleUploadSuccess = (path) => {
   filePath.value = path;
   // Clear all plots
   waveform.clear();
+  envelopeDb.clear();
   frequency.clear();
   spectrogram.clear();
   surface3d.clear();
@@ -63,6 +67,7 @@ const handleExampleSelected = (filename) => {
   
   // Clear all plots
   waveform.clear();
+  envelopeDb.clear();
   frequency.clear();
   spectrogram.clear();
   surface3d.clear();
@@ -121,6 +126,9 @@ const fetchDataForActiveTab = () => {
     case 'waveform':
       waveform.fetchData(filePath.value);
       break;
+    case 'envelope':
+      envelopeDb.fetchData(filePath.value);
+      break;
     case 'frequency':
       frequency.fetchData(filePath.value);
       break;
@@ -141,6 +149,9 @@ const clearTabData = (tab) => {
     case 'waveform':
       waveform.clear();
       break;
+    case 'envelope':
+      envelopeDb.clear();
+      break;
     case 'frequency':
       frequency.clear();
       break;
@@ -159,6 +170,7 @@ const clearTabData = (tab) => {
 
 <template>
   <div class="analysis-view">
+    <div class="background-pattern"></div>
     <div class="analysis-header">
       <div class="header-compact">
         <AudioUploader 
@@ -191,6 +203,17 @@ const clearTabData = (tab) => {
             <span class="tooltip-icon">?</span>
             <div class="tooltip-text">
               View the time-domain representation of the impulse response signal.
+            </div>
+          </button>
+          <button 
+            class="nav-item tooltip-container" 
+            :class="{ active: activeTab === 'envelope' }"
+            @click="activeTab = 'envelope'"
+          >
+            <span class="nav-label">Envelope (dB)</span>
+            <span class="tooltip-icon">?</span>
+            <div class="tooltip-text">
+              View the decay envelope in decibel scale, showing how energy decreases over time.
             </div>
           </button>
           <button 
@@ -261,6 +284,14 @@ const clearTabData = (tab) => {
           :filePath="filePath"
         />
 
+        <EnvelopeDbTab
+          v-show="activeTab === 'envelope'"
+          :chartData="envelopeDb.chartData.value"
+          :isLoading="envelopeDb.isLoading.value"
+          :error="envelopeDb.error.value"
+          :isVisible="envelopeDb.isVisible.value"
+        />
+
         <FrequencyTab
           v-show="activeTab === 'frequency'"
           :chartData="frequency.chartData.value"
@@ -315,13 +346,27 @@ const clearTabData = (tab) => {
 
 <style scoped>
 .analysis-view {
+  position: relative;
   max-width: 1400px;
   margin: 0 auto;
   padding: var(--space-xl);
   animation: fadeIn 0.4s ease;
+  overflow: hidden;
+}
+
+.background-pattern {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(41, 79, 82, 0.28) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(27, 38, 85, 0.466) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(29, 130, 155, 0.068) 0%, transparent 70%);
+  z-index: 0;
 }
 
 .analysis-header {
+  position: relative;
+  z-index: 1;
   margin-bottom: var(--space-lg);
 }
 
@@ -333,6 +378,8 @@ const clearTabData = (tab) => {
 }
 
 .analysis-workspace {
+  position: relative;
+  z-index: 1;
   display: grid;
   grid-template-columns: 240px 1fr;
   gap: var(--space-xl);
