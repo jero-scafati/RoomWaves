@@ -6,6 +6,8 @@ import ApiService from '@/services/ApiService.js';
 const audioSource = ref('example');
 const selectedFile = ref(null);
 const selectedExampleIR = ref('clifford_tower_ir.wav');
+const sweepFile = ref(null);
+const inverseFile = ref(null);
 const isLoading = ref(false);
 const uploadStatus = ref('');
 const uploadError = ref(false);
@@ -15,7 +17,8 @@ const emit = defineEmits(['upload-success', 'example-selected']);
 const exampleIRs = ref([
   { name: 'Small Room', filename: 'audio3.wav' },
   { name: 'Medium Room', filename: 'clifford_tower_ir.wav' },
-  { name: 'Large Room', filename: '1a_marble_hall.mp3' }
+  { name: 'Large Room', filename: '1a_marble_hall.mp3' },
+  { name: 'Classroom UNTREF Caseros II', filename: 'Classroom-UNTREF-Caseros-II.wav' }
 ]);
 
 // Audio preview
@@ -33,9 +36,23 @@ const handleFileChange = (event) => {
 const handleSourceChange = () => {
   selectedFile.value = null;
   selectedExampleIR.value = '';
+  sweepFile.value = null;
+  inverseFile.value = null;
   uploadStatus.value = '';
   uploadError.value = false;
   clearPreview();
+};
+
+const handleSweepChange = (event) => {
+  sweepFile.value = event.target.files[0];
+  uploadStatus.value = '';
+  uploadError.value = false;
+};
+
+const handleInverseChange = (event) => {
+  inverseFile.value = event.target.files[0];
+  uploadStatus.value = '';
+  uploadError.value = false;
 };
 
 const handleExampleSelect = () => {
@@ -58,6 +75,26 @@ const uploadFile = async () => {
   } catch (err) {
     uploadError.value = true;
     uploadStatus.value = 'Error uploading the file.';
+    console.error(err);
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+const calculateIR = async () => {
+  if (!sweepFile.value || !inverseFile.value) return;
+
+  isLoading.value = true;
+  uploadStatus.value = 'Calculating IR from sweep...';
+  uploadError.value = false;
+
+  try {
+    const response = await ApiService.calculateIR(sweepFile.value, inverseFile.value);
+    uploadStatus.value = `Success! IR calculated: "${response.data.filename}"`;
+    emit('upload-success', response.data.path);
+  } catch (err) {
+    uploadError.value = true;
+    uploadStatus.value = err.response?.data?.detail || 'Error calculating IR.';
     console.error(err);
   } finally {
     isLoading.value = false;
@@ -103,9 +140,12 @@ const clearPreview = () => {
 const canProcess = computed(() => {
   if (audioSource.value === 'example') {
     return selectedExampleIR.value && !isLoading.value;
-  } else {
+  } else if (audioSource.value === 'upload') {
     return selectedFile.value && !isLoading.value;
+  } else if (audioSource.value === 'sweep') {
+    return sweepFile.value && inverseFile.value && !isLoading.value;
   }
+  return false;
 });
 
 // Load preview on mount for pre-selected example
@@ -126,9 +166,21 @@ onMounted(() => {
         <input type="radio" value="example" v-model="audioSource" @change="handleSourceChange" />
         <span>Use Example IR</span>
       </label>
-      <label class="radio-option">
+      <label class="radio-option tooltip-container">
         <input type="radio" value="upload" v-model="audioSource" @change="handleSourceChange" />
         <span>Upload My IR</span>
+        <span class="tooltip-icon">?</span>
+        <div class="tooltip-text">
+          Upload your own impulse response audio file (WAV, MP3, etc.) to analyze its acoustic properties.
+        </div>
+      </label>
+      <label class="radio-option tooltip-container">
+        <input type="radio" value="sweep" v-model="audioSource" @change="handleSourceChange" />
+        <span>Calculate from Sweep</span>
+        <span class="tooltip-icon">?</span>
+        <div class="tooltip-text">
+          Upload a recorded sweep and its inverse filter to calculate the impulse response through deconvolution.
+        </div>
       </label>
     </div>
     
@@ -153,7 +205,7 @@ onMounted(() => {
     </div>
     
     <!-- Upload IR -->
-    <div v-else class="input-group">
+    <div v-else-if="audioSource === 'upload'" class="input-group">
       <label for="file-input" class="input-label">Upload Audio File</label>
       <input
         id="file-input"
@@ -165,6 +217,31 @@ onMounted(() => {
       
       <button @click="uploadFile" :disabled="!canProcess" class="process-btn">
         {{ isLoading ? 'Uploading...' : 'Analyze' }}
+      </button>
+    </div>
+
+    <!-- Calculate from Sweep -->
+    <div v-else-if="audioSource === 'sweep'" class="input-group">
+      <label for="sweep-input" class="input-label">Recorded Sweep</label>
+      <input
+        id="sweep-input"
+        type="file"
+        @change="handleSweepChange"
+        accept="audio/*"
+        class="file-input"
+      />
+      
+      <label for="inverse-input" class="input-label">Inverse Filter</label>
+      <input
+        id="inverse-input"
+        type="file"
+        @change="handleInverseChange"
+        accept="audio/*"
+        class="file-input"
+      />
+      
+      <button @click="calculateIR" :disabled="!canProcess" class="process-btn">
+        {{ isLoading ? 'Calculating...' : 'Calculate IR' }}
       </button>
     </div>
     
@@ -212,7 +289,7 @@ onMounted(() => {
   border-radius: var(--radius-md);
   border: 1px solid rgba(255, 255, 255, 0.05);
   position: relative;
-  z-index: 1;
+  z-index: 10;
 }
 
 .radio-option {
@@ -226,6 +303,8 @@ onMounted(() => {
   transition: all var(--transition-base);
   padding: var(--space-xs) var(--space-sm);
   border-radius: var(--radius-md);
+  position: relative;
+  z-index: 1;
 }
 
 .radio-option:hover {
@@ -404,6 +483,63 @@ onMounted(() => {
   }
 }
 
+.tooltip-container {
+  position: relative;
+}
+
+.tooltip-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  margin-left: var(--space-xs);
+  background: var(--color-primary);
+  color: white;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: var(--font-weight-bold);
+  cursor: help;
+  flex-shrink: 0;
+}
+
+.tooltip-text {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(8px);
+  background: var(--color-surface-elevated);
+  color: var(--color-text-primary);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  white-space: normal;
+  width: 250px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--glass-border);
+  opacity: 0;
+  visibility: hidden;
+  transition: all var(--transition-base);
+  z-index: var(--z-tooltip);
+  pointer-events: none;
+  line-height: 1.4;
+}
+
+.tooltip-text::after {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-bottom-color: var(--color-surface-elevated);
+}
+
+.tooltip-container:hover .tooltip-text {
+  opacity: 1;
+  visibility: visible;
+}
+
 @media (max-width: 768px) {
   .source-selector {
     flex-direction: column;
@@ -412,6 +548,11 @@ onMounted(() => {
 
   .upload-section {
     padding: var(--space-sm);
+  }
+
+  .tooltip-text {
+    width: 200px;
+    font-size: 12px;
   }
 }
 </style>

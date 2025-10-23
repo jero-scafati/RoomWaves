@@ -6,11 +6,10 @@ import { ref, computed } from 'vue';
 import ApiService from '@/services/ApiService.js';
 
 export function useSurface3D() {
-  // State
   const data = ref(null);
   const isLoading = ref(false);
   const error = ref('');
-  const dataReduction = ref(2);
+  const dataReduction = ref(1);
   const bands = ref(48);
   const bandsOptions = [1, 3, 6, 12, 24, 48];
 

@@ -183,46 +183,70 @@ const clearTabData = (tab) => {
         </div>
         <nav class="nav-menu">
           <button 
-            class="nav-item" 
+            class="nav-item tooltip-container" 
             :class="{ active: activeTab === 'waveform' }"
             @click="activeTab = 'waveform'"
           >
             <span class="nav-label">Waveform</span>
+            <span class="tooltip-icon">?</span>
+            <div class="tooltip-text">
+              View the time-domain representation of the impulse response signal.
+            </div>
           </button>
           <button 
-            class="nav-item" 
+            class="nav-item tooltip-container" 
             :class="{ active: activeTab === 'frequency' }"
             @click="activeTab = 'frequency'"
           >
             <span class="nav-label">Frequency</span>
+            <span class="tooltip-icon">?</span>
+            <div class="tooltip-text">
+              Analyze the frequency response across different octave bands.
+            </div>
           </button>
           <button 
-            class="nav-item" 
+            class="nav-item tooltip-container" 
             :class="{ active: activeTab === 'spectrogram' }"
             @click="activeTab = 'spectrogram'"
           >
             <span class="nav-label">Spectrogram</span>
+            <span class="tooltip-icon">?</span>
+            <div class="tooltip-text">
+              View the time-frequency representation showing how energy distributes over time and frequency.
+            </div>
           </button>
           <button 
-            class="nav-item" 
+            class="nav-item tooltip-container" 
             :class="{ active: activeTab === 'surface' }"
             @click="activeTab = 'surface'"
           >
             <span class="nav-label">3D Surface</span>
+            <span class="tooltip-icon">?</span>
+            <div class="tooltip-text">
+              Interactive 3D visualization of the spectral decay over time.
+            </div>
           </button>
           <button 
-            class="nav-item" 
+            class="nav-item tooltip-container" 
             :class="{ active: activeTab === 'parameters' }"
             @click="activeTab = 'parameters'"
           >
             <span class="nav-label">Parameters</span>
+            <span class="tooltip-icon">?</span>
+            <div class="tooltip-text">
+              View acoustic parameters like RT60, EDT, C50, and D50 according to ISO 3382.
+            </div>
           </button>
           <button 
-            class="nav-item" 
+            class="nav-item tooltip-container" 
             :class="{ active: activeTab === 'convolution' }"
             @click="activeTab = 'convolution'"
           >
             <span class="nav-label">Convolution</span>
+            <span class="tooltip-icon">?</span>
+            <div class="tooltip-text">
+              Convolve this IR with your own audio to simulate how it would sound in this space.
+            </div>
           </button>
         </nav>
       </aside>
@@ -327,6 +351,8 @@ const clearTabData = (tab) => {
   top: var(--space-xl);
   box-shadow: var(--glass-shadow);
   transition: all var(--transition-base);
+  overflow: visible;
+  z-index: var(--z-sticky);
 }
 
 .sidebar-nav:hover {
@@ -354,6 +380,8 @@ const clearTabData = (tab) => {
   display: flex;
   flex-direction: column;
   gap: var(--space-sm);
+  overflow: visible;
+  position: relative;
 }
 
 .nav-item {
@@ -371,7 +399,7 @@ const clearTabData = (tab) => {
   font-size: var(--font-size-base);
   text-align: left;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .nav-item::before {
@@ -384,6 +412,7 @@ const clearTabData = (tab) => {
   background: var(--color-primary);
   transform: scaleY(0);
   transition: transform var(--transition-base);
+  border-radius: var(--radius-lg) 0 0 var(--radius-lg);
 }
 
 .nav-item:hover {
@@ -411,6 +440,69 @@ const clearTabData = (tab) => {
 
 .nav-label {
   flex: 1;
+}
+
+.tooltip-container {
+  position: relative;
+  z-index: 9999;
+}
+
+.tooltip-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  background: var(--color-primary);
+  color: white;
+  border-radius: 50%;
+  font-size: 10px;
+  font-weight: var(--font-weight-bold);
+  cursor: help;
+  flex-shrink: 0;
+  opacity: 0.7;
+  transition: opacity var(--transition-base);
+}
+
+.tooltip-container:hover .tooltip-icon {
+  opacity: 1;
+}
+
+.tooltip-text {
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  transform: translateY(-50%) translateX(12px);
+  background: var(--color-surface-elevated);
+  color: var(--color-text-primary);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  white-space: normal;
+  width: 220px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--glass-border);
+  opacity: 0;
+  visibility: hidden;
+  transition: all var(--transition-base);
+  z-index: 10000;
+  pointer-events: none;
+  line-height: 1.4;
+}
+
+.tooltip-text::after {
+  content: '';
+  position: absolute;
+  right: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 6px solid transparent;
+  border-right-color: var(--color-surface-elevated);
+}
+
+.tooltip-container:hover .tooltip-text {
+  opacity: 1;
+  visibility: visible;
 }
 
 .content-area {
@@ -495,6 +587,29 @@ const clearTabData = (tab) => {
   .nav-item {
     padding: var(--space-sm);
     font-size: var(--font-size-sm);
+  }
+
+  .tooltip-text {
+    left: 50%;
+    top: 100%;
+    transform: translateX(-50%) translateY(8px);
+    width: 200px;
+  }
+
+  .tooltip-text::after {
+    right: auto;
+    bottom: 100%;
+    top: auto;
+    left: 50%;
+    transform: translateX(-50%);
+    border-right-color: transparent;
+    border-bottom-color: var(--color-surface-elevated);
+  }
+
+  .tooltip-icon {
+    width: 12px;
+    height: 12px;
+    font-size: 9px;
   }
 }
 </style>

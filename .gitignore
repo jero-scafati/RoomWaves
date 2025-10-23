@@ -85,3 +85,8 @@ parcel-cache/
 .vagrant/
 tmp/
 temp/
+
+# === Example audio files (large binaries) ===
+frontend/public/examples/*.wav
+frontend/public/examples/*.mp3
+!frontend/public/examples/README.md

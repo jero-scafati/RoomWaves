@@ -1,8 +1,10 @@
 import numpy as np
+import pandas as pd
 import soundfile as sf
 from io import BytesIO
 import base64
 from soundfile import write
+from scipy.signal import hilbert
 
 def ruidoRosa_voss(t, ncols=16, fs=44100):
     """
@@ -117,3 +119,80 @@ def wav_to_b64(signal, fs):
     write(buf, signal, fs, format='WAV')
     buf.seek(0)
     return base64.b64encode(buf.read()).decode('ascii')
+
+def get_ir_from_deconvolution(
+    recording: np.ndarray,
+    inverse_filter: np.ndarray,
+    fs: int,
+    start_margin_ms: float = 20.0,
+    duration_factor: float = 4.0
+) -> dict | None:
+    try:
+        n_linear = len(recording) + len(inverse_filter) - 1
+        n_fft = 1 << int(np.ceil(np.log2(n_linear)))
+
+        fft_rec = np.fft.fft(recording, n=n_fft)
+        fft_inv = np.fft.fft(inverse_filter, n=n_fft)
+
+        ir_full_complex = np.fft.ifft(fft_rec * fft_inv)
+        ir_full = np.real(ir_full_complex)
+        ir_full = ir_full[:n_linear]
+
+        if len(ir_full) == 0 or np.all(ir_full == 0):
+            return None
+
+        peak_index = np.argmax(np.abs(ir_full))
+        peak_value = np.abs(ir_full[peak_index])
+
+        if peak_value < 1e-9:
+            max_abs = np.max(np.abs(ir_full))
+            if max_abs > 1e-9:
+                ir_full /= max_abs
+            return {'audio_data': ir_full, 'fs': fs}
+
+        start_samples = int(start_margin_ms * fs / 1000)
+        start_index = max(0, peak_index - start_samples)
+
+        analytic_signal = hilbert(ir_full[peak_index:])
+        envelope = np.abs(analytic_signal)
+        envelope_db = 20 * np.log10(envelope / peak_value + 1e-9)
+
+        valid_indices = np.where((envelope_db >= -35) & (envelope_db <= -5))[0]
+        
+        if len(valid_indices) > int(0.05 * fs):
+            time_vals = valid_indices / fs
+            db_vals = envelope_db[valid_indices]
+            
+            try:
+                slope = np.polyfit(time_vals, db_vals, 1)[0]
+                if slope < 0:
+                    estimated_t60 = -60.0 / slope
+                    estimated_t60 = np.clip(estimated_t60, 0.1, 10.0)
+                else:
+                    estimated_t60 = 1.0
+            except:
+                estimated_t60 = 1.0
+        else:
+            estimated_t60 = 1.0
+
+        ir_duration = estimated_t60 * duration_factor
+        end_index = peak_index + int(ir_duration * fs)
+        end_index = min(end_index, len(ir_full))
+
+        if end_index <= start_index:
+            start_index = 0
+            end_index = len(ir_full)
+
+        trimmed_ir = ir_full[start_index:end_index]
+
+        max_abs_trimmed = np.max(np.abs(trimmed_ir))
+        if max_abs_trimmed > 1e-9:
+            trimmed_ir /= max_abs_trimmed
+
+        return {'audio_data': trimmed_ir, 'fs': fs}
+
+    except Exception as e:
+        print(f"Error during deconvolution and trimming: {e}")
+        import traceback
+        traceback.print_exc()
+        return None

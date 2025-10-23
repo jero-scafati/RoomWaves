@@ -20,7 +20,10 @@ onMounted(async () => {
     
     <section class="hero">
       <div class="hero-card">
-        <h1 class="hero-title">Roomwaves</h1>
+        <div class="hero-title-container">
+          <img src="/roomwaves.svg" alt="Roomwaves logo" class="hero-logo-icon" />
+          <h1 class="hero-title">Roomwaves</h1>
+        </div>
         <p class="hero-subtitle">Room Impulse Response Analysis</p>
         <p class="hero-description">
           Professional acoustic analysis and signal generation for room impulse responses
@@ -182,14 +185,24 @@ onMounted(async () => {
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
 }
 
+.hero-title-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-md);
+}
+
+.hero-logo-icon {
+  width: 30px;
+  height: 30px;
+}
+
 .hero-title {
   font-size: var(--font-size-4xl);
   font-weight: var(--font-weight-bold);
-  margin-bottom: var(--space-md);
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  margin-bottom: 0;
+  color: var(--color-text-primary);
   position: relative;
   z-index: 1;
 }

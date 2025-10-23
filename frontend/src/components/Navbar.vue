@@ -14,6 +14,7 @@ const navigateTo = (path) => {
       <!-- Left Side: Logo and Navigation -->
       <div class="navbar-left">
         <div class="logo" @click="navigateTo('/')">
+          <img src="/roomwaves.svg" alt="Roomwaves logo" class="logo-icon" />
           <span class="logo-text">Roomwaves</span>
         </div>
         <div class="nav-links">
@@ -80,12 +81,17 @@ const navigateTo = (path) => {
   display: flex;
   align-items: center;
   cursor: pointer;
+  gap: var(--space-sm);
 }
 
 .logo-text {
   font-size: var(--font-size-2xl);
   font-weight: var(--font-weight-bold);
   color: var(--color-text-primary);
+}
+.logo-icon {
+  width: 25px;
+  height: 25px;
 }
 
 .nav-links {

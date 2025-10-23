@@ -4,7 +4,7 @@ import numpy as np
 import librosa
 
 from app.core.config import settings
-from app.routers import upload, plot, parameters, signal, snr
+from app.routers import upload, plot, parameters, signal, snr, calculate_ir
 
 app = FastAPI(
     title=settings.APP_NAME,
@@ -26,6 +26,7 @@ app.include_router(plot.router, prefix="/api", tags=["plot"])
 app.include_router(parameters.router, prefix="/api", tags=["parameters"])
 app.include_router(signal.router, prefix="/api", tags=["signal"])
 app.include_router(snr.router, prefix="/api", tags=["snr"])
+app.include_router(calculate_ir.router, prefix="/api", tags=["calculate-ir"])
 
 @app.get("/")
 def read_root():

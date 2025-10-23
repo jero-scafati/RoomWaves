@@ -7,6 +7,7 @@ const currentYear = new Date().getFullYear();
     <div class="footer-container">
       <div class="footer-content">
         <div class="footer-logo">
+          <img src="/roomwaves.svg" alt="Roomwaves logo" class="footer-logo-icon" />
           <span class="logo-text">Roomwaves</span>
         </div>
         <p class="footer-description">
@@ -50,12 +51,18 @@ const currentYear = new Date().getFullYear();
   justify-content: center;
   align-items: center;
   margin-bottom: var(--space-md);
+  gap: var(--space-sm);
+}
+
+.footer-logo-icon {
+  width: 18px;
+  height: 18px;
 }
 
 .logo-text {
   font-size: var(--font-size-xl);
   font-weight: var(--font-weight-bold);
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+  background: var(--color-text-secondary);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;

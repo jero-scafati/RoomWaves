@@ -67,4 +67,17 @@ export default {
   getFileUrl(filePath) {
     return apiClient.get(`/api/file-url/${filePath}`);
   },
+
+  calculateIR(recordedSweep, inverseFilter, durationFactor = 4.0) {
+    const formData = new FormData();
+    formData.append('recorded_sweep', recordedSweep);
+    formData.append('inverse_filter', inverseFilter);
+    formData.append('duration_factor', durationFactor);
+
+    return apiClient.post('/api/calculate-ir', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+  },
 };
