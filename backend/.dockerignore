@@ -2,8 +2,9 @@
 .git
 .gitignore
 .coverage
+.coveragearc
 .test_plot.py
-htmlcov/
+.htmlcov/
 # Python
 .venv
 __pycache__/
