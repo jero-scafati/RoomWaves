@@ -1,6 +1,5 @@
 from fastapi import APIRouter
 from enum import Enum
-import librosa
 
 from app.services.s3_service import download_file_from_s3
 from app.services.plotting import plot_waveform, plot_frequency_response, plot_spectrogram, plot_csd
@@ -17,7 +16,8 @@ class BandsPerOctave(int, Enum):
 
 @router.get("/plot/{file_path:path}")
 async def get_plot_data(file_path: str):
-
+    import librosa
+    
     file_stream = download_file_from_s3(file_path)
     y, sr = librosa.load(file_stream, sr=None, mono=True)
     plot_data = plot_waveform(y, sr)
@@ -26,9 +26,9 @@ async def get_plot_data(file_path: str):
 
 @router.get("/spectrogram/{file_path:path}")
 async def get_spectrogram_data(file_path: str):
-
+    import librosa
+    
     file_stream = download_file_from_s3(file_path)
-
     y, sr = librosa.load(file_stream, sr=None, mono=True)
     plot_data = plot_spectrogram(y, sr)
     
@@ -38,9 +38,9 @@ async def get_spectrogram_data(file_path: str):
 async def get_csd_data(
     file_path: str,
     bands: BandsPerOctave = BandsPerOctave.twenty_four):
+    import librosa
     
     file_stream = download_file_from_s3(file_path)
-
     y, sr = librosa.load(file_stream, sr=None, mono=True)
     plot_data = plot_csd(y, sr, bands_per_oct=bands.value)
 
@@ -50,13 +50,9 @@ async def get_csd_data(
 async def get_frequency_response_data(
     file_path: str,
     bands: BandsPerOctave = BandsPerOctave.twenty_four):
-    """
-    Provides data for frequency response plot.
-    - **filename**: The name of the uploaded audio file.
-    - **bands**: The number of bands per octave for smoothing.
-    """
+    import librosa
+    
     file_stream = download_file_from_s3(file_path)
-
     y, sr = librosa.load(file_stream, sr=None, mono=True)
 
     frequency_data = plot_frequency_response(y, sr, bands_per_oct=bands.value)

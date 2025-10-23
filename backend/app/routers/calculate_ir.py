@@ -1,10 +1,7 @@
-import os
 import uuid
 import io
 
 from fastapi import APIRouter, UploadFile, File, HTTPException
-import librosa
-import soundfile as sf
 
 from app.core.config import settings
 from app.services.s3_service import upload_file_to_s3
@@ -45,7 +42,9 @@ async def calculate_ir(
         )
     
     try:
-        # Load audio files
+        import librosa
+        import soundfile as sf
+        
         sweep_audio, sweep_fs = librosa.load(recorded_sweep.file, sr=None, mono=True)
         filter_audio, filter_fs = librosa.load(inverse_filter.file, sr=None, mono=True)
         

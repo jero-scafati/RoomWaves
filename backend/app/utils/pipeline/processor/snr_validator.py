@@ -1,4 +1,3 @@
-import numpy as np
 import warnings
 from app.utils.pipeline.abc import SignalProcessor
 
@@ -10,6 +9,8 @@ class SNRValidator(SignalProcessor):
         self.noise_tail_percentage = noise_tail_percentage
 
     def process(self, data: dict) -> dict:
+        import numpy as np
+        
         impulse_response = data.get('ri')
 
         if impulse_response is None or len(impulse_response) == 0:

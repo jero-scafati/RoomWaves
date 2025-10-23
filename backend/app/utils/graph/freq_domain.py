@@ -1,22 +1,11 @@
-import numpy as np
-from scipy.fft import rfft, rfftfreq
-
 def nextpow2(x: float) -> int:
+    import numpy as np
     """Calculates the next power of 2 greater than or equal to x."""
     return int(2**np.ceil(np.log2(x)))
 
-def octave_smooth_fast(f: np.ndarray, mag_db: np.ndarray, bands_per_oct: int = 24) -> np.ndarray:
-    """
-    Efficient octave smoothing implementation for a frequency magnitude spectrum.
-
-    Args:
-        f (np.ndarray): Frequency array.
-        mag_db (np.ndarray): Magnitude spectrum in dB.
-        bands_per_oct (int): The number of smoothing steps per octave.
-
-    Returns:
-        np.ndarray: The smoothed magnitude spectrum in dB.
-    """
+def octave_smooth_fast(f, mag_db, bands_per_oct: int = 24):
+    import numpy as np
+    
     mask_pos = f > 0
     f_pos = f[mask_pos]
     mag_db_pos = mag_db[mask_pos]
@@ -53,24 +42,14 @@ def octave_smooth_fast(f: np.ndarray, mag_db: np.ndarray, bands_per_oct: int = 2
 
 
 def get_frequency_data(
-    y: np.ndarray,
+    y,
     sr: int,
     bands_per_oct: int = 24,
     max_nfft: int = 262144
 ) -> dict[str, list[float]]:
-    """
-    Calculates the octave-smoothed frequency response of an impulse response.
-    Returns data ready for JSON serialization.
-
-    Args:
-        y (np.ndarray): The time-domain audio signal.
-        sr (int): The sample rate.
-        bands_per_oct (int): Smoothing factor.
-        max_nfft (int): Maximum FFT size to prevent excessive computation.
-
-    Returns:
-        Dict[str, List[float]]: A dictionary with 'frequencies' and smoothed 'magnitudes' (dB).
-    """
+    import numpy as np
+    from scipy.fft import rfft, rfftfreq
+    
     nfft = min(nextpow2(len(y)) * 4, max_nfft)
 
     H = rfft(y, n=nfft)

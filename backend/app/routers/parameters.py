@@ -1,7 +1,6 @@
 from enum import Enum
 
 from fastapi import APIRouter
-import librosa
 
 from app.services.get_parameters import process_impulse_response
 from app.services.s3_service import download_file_from_s3
@@ -16,6 +15,7 @@ class BandsPerOctave(int, Enum):
 async def get_acoustic_parameters(
     file_path: str,
     bands: BandsPerOctave = BandsPerOctave.one):
+    import librosa
     
     file_stream = download_file_from_s3(file_path)
     y, fs = librosa.load(file_stream, sr=None, mono=True)

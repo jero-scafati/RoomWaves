@@ -1,7 +1,5 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-import numpy as np
-import librosa
 
 from app.core.config import settings
 from app.routers import upload, plot, parameters, signal, snr, calculate_ir
@@ -34,6 +32,7 @@ def read_root():
 
 @app.get("/warmup")
 def warmup():
+    import numpy as np
     dummy_signal = np.random.randn(1000)
     dummy_fft = np.fft.fft(dummy_signal)
     result = np.abs(dummy_fft).mean()

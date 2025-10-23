@@ -1,5 +1,3 @@
-import numpy as np
-
 from app.utils.pipeline.abc import SignalProcessor
 from app.utils.pipeline.helpers import to_db_scale, linear_regression_in_range
 
@@ -7,7 +5,9 @@ class DecayAnalyzer(SignalProcessor):
     """
     Processor to run the Lundeby algorithm and calculate the Schroeder integral.
     """
-    def _calculate_rms_by_block(self, impulse_response: np.ndarray, block_ms: int = 20) -> dict:
+    def _calculate_rms_by_block(self, impulse_response, block_ms: int = 20) -> dict:
+        import numpy as np
+        
         block_size = int(self.fs * block_ms / 1000)
         num_blocks = len(impulse_response) // block_size
         trimmed_ir = impulse_response[:num_blocks * block_size]
@@ -15,7 +15,9 @@ class DecayAnalyzer(SignalProcessor):
         rms_per_block = np.sqrt(np.mean(ir_blocks**2, axis=1))
         return {'rms_values': rms_per_block, 'block_size': block_size}
 
-    def _schroeder_integral(self, power_signal: np.ndarray, fs: float, crossover_index: int = None) -> dict:
+    def _schroeder_integral(self, power_signal, fs: float, crossover_index: int = None) -> dict:
+        import numpy as np
+        
         dt = 1.0 / fs
         p2 = power_signal**2
         if crossover_index is None:
@@ -25,7 +27,6 @@ class DecayAnalyzer(SignalProcessor):
         cumulative_energy = np.cumsum(p2[:crossover_index]) * dt
         schroeder_curve = total_energy - cumulative_energy
         
-        # Pad with zeros if necessary
         if len(schroeder_curve) < len(p2):
             padding = np.zeros(len(p2) - len(schroeder_curve))
             schroeder_curve = np.concatenate((schroeder_curve, padding))
@@ -33,7 +34,9 @@ class DecayAnalyzer(SignalProcessor):
         schroeder_curve[crossover_index:] = 0.0
         return {'schroeder_curve': schroeder_curve, 'p_squared': p2}
 
-    def _lundeby_crossover(self, impulse_response: np.ndarray) -> dict:
+    def _lundeby_crossover(self, impulse_response) -> dict:
+        import numpy as np
+        
         rms_data = self._calculate_rms_by_block(impulse_response)
         rms_values, block_size = rms_data['rms_values'], rms_data['block_size']
         time_vector_rms = np.arange(len(rms_values)) * block_size / self.fs

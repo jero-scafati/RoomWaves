@@ -1,9 +1,8 @@
-import numpy as np
-from scipy.interpolate import interp1d
-from scipy.signal import windows
-from scipy.ndimage import gaussian_filter
-
-def get_csd_data(signal: np.ndarray, sr: int, bands_per_oct: int) -> dict:
+def get_csd_data(signal, sr: int, bands_per_oct: int) -> dict:
+    import numpy as np
+    from scipy.interpolate import interp1d
+    from scipy.signal import windows
+    from scipy.ndimage import gaussian_filter
     """
     Performs Cumulative Spectral Decay (CSD) analysis on an impulse response.
     
@@ -108,18 +107,8 @@ def get_csd_data(signal: np.ndarray, sr: int, bands_per_oct: int) -> dict:
 
 
 def fractional_octave_smoothing(spectrum_db, frequencies, fraction):
-    """
-    Apply fractional octave smoothing to a spectrum.
+    import numpy as np
     
-    Args:
-        spectrum_db: Magnitude spectrum in dB
-        frequencies: Frequency values corresponding to spectrum
-        fraction: Octave fraction (e.g., 24 for 1/24 octave)
-        
-    Returns:
-        Smoothed spectrum
-    """
-    # Calculate octave ratio
     octave_ratio = 2 ** (1 / fraction)
     
     # Initialize smoothed spectrum

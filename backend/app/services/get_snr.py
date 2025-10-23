@@ -1,10 +1,10 @@
-import numpy as np
 import warnings
 
 def calculate_snr(
-    ri: np.ndarray,
+    ri,
     noise_tail_percentage: float = 0.2
 ) -> float:
+    import numpy as np
     """
     Calculate the Signal-to-Noise Ratio (SNR) of an impulse response.
     

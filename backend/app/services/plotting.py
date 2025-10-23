@@ -1,15 +1,13 @@
-import numpy as np
-
 from app.utils.graph import get_waveform_data, get_spectrogram_data, get_frequency_data, get_csd_data 
 from app.utils.pipeline.processor import DecayAnalyzer, EnvelopeSmoother
 
-def plot_waveform(signal: np.ndarray, sr: int, num_points: int = 2000) -> dict[str, list[object]]:
+def plot_waveform(signal, sr: int, num_points: int = 2000) -> dict[str, list[object]]:
     return get_waveform_data(signal, sr, num_points)
 
-def plot_frequency_response(signal: np.ndarray, sr: int, bands_per_oct: int) -> dict:
+def plot_frequency_response(signal, sr: int, bands_per_oct: int) -> dict:
     return get_frequency_data(signal, sr, bands_per_oct)
 
-def plot_spectrogram(signal: np.ndarray, sr: int) -> dict:
+def plot_spectrogram(signal, sr: int) -> dict:
     """
     Creates a spectrogram from a signal, intelligently truncating it first
     by analyzing its energy decay curve.
@@ -57,7 +55,7 @@ def plot_spectrogram(signal: np.ndarray, sr: int) -> dict:
 
     return get_spectrogram_data(truncated_signal, sr)
 
-def plot_csd(signal: np.ndarray, sr: int, bands_per_oct: int) -> dict:
+def plot_csd(signal, sr: int, bands_per_oct: int) -> dict:
     """
     Creates a Cumulative Spectral Decay (CSD) plot from a signal.
     """

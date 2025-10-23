@@ -1,9 +1,8 @@
-import numpy as np
-from scipy import signal
-from scipy.interpolate import interp1d, RectBivariateSpline
-from scipy.ndimage import gaussian_filter
-
-def get_spectrogram_data(y: np.ndarray, sr: int) -> dict:
+def get_spectrogram_data(y, sr: int) -> dict:
+    import numpy as np
+    from scipy import signal
+    from scipy.interpolate import interp1d, RectBivariateSpline
+    from scipy.ndimage import gaussian_filter
     """
     Calculates and resamples the spectrogram data onto a logarithmic frequency scale.
 

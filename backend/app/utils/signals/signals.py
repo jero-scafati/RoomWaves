@@ -1,10 +1,8 @@
-import numpy as np
 from io import BytesIO  
 import base64
-from soundfile import write
-from scipy.signal import hilbert
 
 def generar_sweep_inverse(duracion,fs=44100 ,f_inferior=20 ,f_superior=20000):
+    import numpy as np
     """
     Genera un barrido logarítmico de frecuencias (sine sweep) y un filtro inverso, entre f_inferior y f_superior.
 
@@ -56,18 +54,22 @@ def generar_sweep_inverse(duracion,fs=44100 ,f_inferior=20 ,f_superior=20000):
     return sweep.astype(np.float32), inverse_sweep.astype(np.float32), fs
 
 def wav_to_b64(signal, fs):
+    from soundfile import write
     buf = BytesIO()
     write(buf, signal, fs, format='WAV')
     buf.seek(0)
     return base64.b64encode(buf.read()).decode('ascii')
 
 def get_ir_from_deconvolution(
-    recording: np.ndarray,
-    inverse_filter: np.ndarray,
+    recording,
+    inverse_filter,
     fs: int,
     start_margin_ms: float = 20.0,
     duration_factor: float = 4.0
 ) -> dict | None:
+    import numpy as np
+    from scipy.signal import hilbert
+    
     try:
         n_linear = len(recording) + len(inverse_filter) - 1
         n_fft = 1 << int(np.ceil(np.log2(n_linear)))

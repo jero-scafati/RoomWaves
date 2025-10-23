@@ -1,7 +1,6 @@
-import librosa
-import numpy as np
-
-def get_waveform_data(signal: np.ndarray, sr: int, num_points: int = 2000) -> dict[str, list[object]]:
+def get_waveform_data(signal, sr: int, num_points: int = 2000) -> dict[str, list[object]]:
+    import librosa
+    import numpy as np
     """
     Downsamples a signal and prepares its time-domain data (labels and amplitude)
     for plotting in a JSON-compatible format.

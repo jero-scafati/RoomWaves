@@ -1,5 +1,3 @@
-import numpy as np
-
 from app.utils.pipeline .abc import SignalProcessor
 
 class EnvelopeSmoother(SignalProcessor):
@@ -10,8 +8,9 @@ class EnvelopeSmoother(SignalProcessor):
         super().__init__(fs)
         self.window_samples = int(smoothing_window_ms * 1e-3 * fs)
 
-    def _hilbert_transform(self, time_signal: np.ndarray) -> np.ndarray:
-        """Calculates the signal envelope using the Hilbert transform."""
+    def _hilbert_transform(self, time_signal):
+        import numpy as np
+        
         signal_length = len(time_signal)
         if signal_length == 0:
             return np.array([])
@@ -28,8 +27,9 @@ class EnvelopeSmoother(SignalProcessor):
         analytic_signal = np.fft.ifft(freq_domain_signal * h)
         return np.abs(analytic_signal)
 
-    def _moving_average_filter(self, signal_to_smooth: np.ndarray, window_length: int) -> np.ndarray:
-        """Applies a moving average filter to the signal."""
+    def _moving_average_filter(self, signal_to_smooth, window_length: int):
+        import numpy as np
+        
         if window_length < 1:
             raise ValueError("Window length must be at least 1.")
         if window_length == 1 or len(signal_to_smooth) == 0:

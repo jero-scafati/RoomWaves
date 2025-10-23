@@ -1,9 +1,7 @@
-import numpy as np
-
 from app.utils.pipeline.orchestrator import AcousticPipeline
 
 def process_impulse_response(
-    ri: np.ndarray,
+    ri,
     fs: int,
     filter_type: int,
     smoothing_window_ms: int

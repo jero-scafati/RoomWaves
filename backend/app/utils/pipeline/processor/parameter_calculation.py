@@ -1,5 +1,3 @@
-import numpy as np
-
 from app.utils.pipeline.abc import SignalProcessor
 from app.utils.pipeline.helpers import linear_regression_in_range
 
@@ -7,12 +5,12 @@ class ParameterCalculator(SignalProcessor):
     """
     Final processor to calculate acoustic parameters according to ISO 3382.
     """
-    def _calculate_clarity_and_definition(self, p_squared: np.ndarray, noise_start_index: int) -> dict:
-        # Validate noise_start_index to prevent empty slice warnings
+    def _calculate_clarity_and_definition(self, p_squared, noise_start_index: int) -> dict:
+        import numpy as np
+        
         if noise_start_index >= len(p_squared) or noise_start_index < 0:
             noise_start_index = max(0, len(p_squared) - 1)
         
-        # Calculate noise power, handling edge cases
         noise_slice = p_squared[noise_start_index:]
         if len(noise_slice) == 0:
             noise_power_per_sample = 0.0
@@ -47,6 +45,8 @@ class ParameterCalculator(SignalProcessor):
         return {'D50': d50, 'C50': c50}
         
     def process(self, data: dict) -> dict:
+        import numpy as np
+        
         decay_curves_db = data['decay_curves_db']
         filtered_signals = data['filtered_signals']
         lundeby_data = data['lundeby_data']

@@ -1,7 +1,6 @@
-import numpy as np
-
-def to_db_scale(signal: np.ndarray) -> np.ndarray:
-    """Converts a signal to a normalized logarithmic scale (dB)."""
+def to_db_scale(signal):
+    import numpy as np
+    
     max_abs = np.max(np.abs(signal))
     # Avoid division by zero for silent signals
     norm_signal = np.abs(signal) / max_abs if max_abs > 0 else np.abs(signal)
@@ -9,13 +8,9 @@ def to_db_scale(signal: np.ndarray) -> np.ndarray:
     clipped_signal = np.clip(norm_signal, 1e-10, None)
     return 10 * np.log10(clipped_signal)
 
-def linear_regression(x: np.ndarray, y: np.ndarray) -> dict:
-    """
-    Performs a linear regression using the least squares method.
-
-    Returns:
-        A dictionary {'slope': float, 'intercept': float}.
-    """
+def linear_regression(x, y) -> dict:
+    import numpy as np
+    
     x, y = np.asarray(x), np.asarray(y)
     n = len(x)
     if n == 0:
@@ -33,10 +28,9 @@ def linear_regression(x: np.ndarray, y: np.ndarray) -> dict:
     
     return {'slope': slope, 'intercept': intercept}
 
-def linear_regression_in_range(x: np.ndarray, y: np.ndarray, upper_limit: float, lower_limit: float) -> dict:
-    """
-    Fits a line to y(x) within the value range [lower_limit, upper_limit] of y.
-    """
+def linear_regression_in_range(x, y, upper_limit: float, lower_limit: float) -> dict:
+    import numpy as np
+    
     mask = (y <= upper_limit) & (y >= lower_limit)
     if not np.any(mask):
         return {'slope': -np.inf, 'intercept': 0}

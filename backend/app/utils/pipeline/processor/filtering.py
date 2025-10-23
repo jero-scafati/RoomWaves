@@ -1,6 +1,3 @@
-import numpy as np
-from scipy import signal
-
 from app.utils.pipeline.abc import SignalProcessor
 from app.utils.pipeline.constants import (
     OCTAVE_FREQUENCIES,
@@ -19,10 +16,9 @@ class BandpassFilter(SignalProcessor):
         self.filter_order = filter_order
 
     def process(self, data: dict) -> dict:
-        """
-        Expects 'ri' in the data dictionary.
-        Adds 'filtered_signals' (a dict of signals filtered by frequency) to the data.
-        """
+        import numpy as np
+        from scipy import signal
+        
         impulse_response = data['ri']
         
         if self.filter_type == 1:
