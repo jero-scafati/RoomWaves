@@ -2,37 +2,17 @@
 
 **RoomWaves** is a comprehensive web application for acoustic analysis and impulse response (IR) processing. It provides tools for analyzing room acoustics, processing audio signals, calculating acoustic parameters, and performing convolution operations.
 
+![App Demo](./frontend/public/examples/video_demo.mp4)
+
 ## Features
 
-- **📊 Acoustic Analysis**: Calculate key acoustic parameters (RT60, EDT, C50, C80, D50, Ts, etc.)
-- **🎵 Signal Processing**: Upload and analyze audio files with advanced signal processing
-- **📈 Visualization**: Interactive 3D surface plots and spectrograms using ECharts
-- **🔊 Impulse Response**: Calculate and analyze room impulse responses
-- **🎚️ SNR Analysis**: Signal-to-noise ratio calculation and visualization
-- **🔄 Convolution**: Convolve dry audio with impulse responses
-- **📄 PDF Reports**: Generate comprehensive acoustic analysis reports
-
-## Project Structure
-
-```
-RoomWaves/
-├── backend/          # FastAPI REST API for acoustic processing
-│   ├── app/
-│   │   ├── routers/      # API endpoints
-│   │   ├── services/     # Business logic
-│   │   ├── utils/        # Signal processing utilities
-│   │   └── core/         # Configuration
-│   ├── tests/            # Backend tests
-│   └── requirements.txt  # Python dependencies
-│
-└── frontend/         # Vue.js web interface
-    ├── src/
-    │   ├── components/   # Vue components
-    │   ├── views/        # Page views
-    │   ├── services/     # API service layer
-    │   └── composables/  # Reusable composition functions
-    └── package.json      # Node dependencies
-```
+- ** Acoustic Analysis**: Calculate key acoustic parameters (RT60, EDT, C50, C80, D50, Ts, etc.)
+- ** Signal Processing**: Upload and analyze audio files with advanced signal processing
+- ** Visualization**: Interactive 3D surface plots and spectrograms using ECharts
+- ** Impulse Response**: Calculate and analyze room impulse responses
+- ** SNR Analysis**: Signal-to-noise ratio calculation and visualization
+- ** Convolution**: Convolve dry audio with impulse responses
+- ** PDF Reports**: Generate comprehensive acoustic analysis reports
 
 ## Quick Start
 
@@ -79,31 +59,6 @@ cd frontend
 docker build -t roomwaves-frontend .
 docker run -p 80:80 roomwaves-frontend
 ```
-
-## Testing
-
-```bash
-cd backend
-pytest              # Run all tests
-pytest -v           # Verbose output
-pytest --cov=app    # With coverage report
-```
-
-## Tech Stack
-
-### Backend
-- **FastAPI** - Modern Python web framework
-- **NumPy** - Numerical computing
-- **SciPy** - Scientific computing and signal processing
-- **Librosa** - Audio analysis
-- **Matplotlib** - Plotting and visualization
-
-### Frontend
-- **Vue 3** - Progressive JavaScript framework
-- **Vite** - Fast build tool
-- **ECharts** - Interactive visualization library
-- **Axios** - HTTP client
-- **jsPDF** - PDF generation
 
 ## API Endpoints
 

@@ -39,22 +39,13 @@ onMounted(async () => {
       </div>
     </section>
 
-    <section class="demo-section">
+<section class="demo-section">
       <div class="demo-card">
         <h2>See It In Action</h2>
         <p class="demo-description">Watch how Roomwaves analyzes acoustic spaces</p>
-        <!-- Replace with your demo GIF or video -->
         <div class="demo-placeholder">
-          <div class="placeholder-content">
-            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polygon points="5 3 19 12 5 21 5 3"></polygon>
-            </svg>
-            <p>Demo video coming soon</p>
-          </div>
-          <!-- Uncomment when you have your demo -->
-          <!-- <img src="/path-to-your-demo.gif" alt="Roomwaves Demo" class="demo-media" /> -->
-          <!-- OR for video: -->
-          <!-- <video src="/path-to-your-demo.mp4" autoplay loop muted playsinline class="demo-media"></video> -->
+          
+          <video src="/examples/video_demo.mp4" autoplay loop muted playsinline class="demo-media"></video>
         </div>
       </div>
     </section>
