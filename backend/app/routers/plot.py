@@ -1,8 +1,9 @@
-from fastapi import APIRouter
 from enum import Enum
 
 from app.services.s3_service import download_file_from_s3
 from app.services.plotting import plot_waveform, plot_frequency_response, plot_spectrogram, plot_csd, plot_envelope_db
+
+from fastapi import APIRouter
 
 router = APIRouter()
 
