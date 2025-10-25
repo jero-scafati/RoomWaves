@@ -2,7 +2,9 @@
 
 **RoomWaves** is a comprehensive web application for acoustic analysis and impulse response (IR) processing. It provides tools for analyzing room acoustics, processing audio signals, calculating acoustic parameters, and performing convolution operations.
 
-![App Demo](./frontend/public/examples/video_demo.mp4)
+
+https://github.com/user-attachments/assets/6a89f296-ffe3-4edf-9c1c-b2bd4a1a685e
+
 
 ## Features
 
